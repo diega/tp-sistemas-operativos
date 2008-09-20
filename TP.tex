@@ -1,0 +1,38 @@
+\documentclass[a4paper,11pt,pdftex]{article}
+\author{Diego L'opez Le'on}
+\title{Trabajo Pr'actico Linux}
+
+\RequirePackage[colorlinks,hyperindex]{hyperref}		% links automaticos, color etc...
+\usepackage[ansinew]{inputenc}					% (input_encoding)acentos, e~nes, etc...
+\usepackage[spanish, activeacute]{babel}			% para trabajar con multiples lenguas
+\usepackage{caratula}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{listings}
+\def\sotitulo#1{\noindent \underline{\textbf{#1}}}		% para hacer un titulo facilmente
+\def\todo#1{\\ \huge \textbf{#1} \normalsize \\}		% para hacer TODOs
+\def\rta{\noindent \textbf{Rta.:}\\}				% para automatizar el formato de Respuestas
+
+%indica que el encabezado lo voy a personalizar con \markboth{}{}
+\pagestyle{myheadings}
+\markboth{}{Trabajo Pr'actico Linux - Sistemas Operativos}
+
+\begin{document}
+
+\materia{Sistemas Operativos}
+\submateria{Segundo Cuatrimestre de 2008}
+\titulo{Trabajo Pr'actico Linux}
+
+\integrante{Diego C'esar L'opez Le'on}{653/02}{dclopez@dc.uba.ar}
+
+\maketitle
+\tableofcontents
+\newpage
+\input{comandosbasicos.tex}
+\input{stdoutypipes.tex}
+\input{scripting.tex}
+%\input{procesosbackground.tex}
+\newpage
+\input{thebibliography.tex}
+
+\end{document}

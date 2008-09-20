@@ -1,0 +1,34 @@
+\section{Uso de STDOUT y PIPES}
+	\subsection{STDOUT}
+		\noindent El operador \verb@a1 > a2@ redirecciona la salida estandar del comando a1 y la guarda en a2.
+			\subsubsection[]{}
+			\noindent El comando:\\
+			 \verb@# ls -R /etc@ \\
+			lista en forma recursiva el contenido del directorio \verb@/etc@.\\
+			Con el caracter \verb@>@ redirecciona la salida de este comando a \verb@ /home/diego/tp/config@.\\
+			El comando usado entonces es:\\
+			 \verb@# ls -R /etc/ > /home/diego/tp/config@
+
+			\subsubsection[]{}
+			\noindent Con el comando:\\
+			 \verb@# wc /home/diego/tp/config@\\
+			la salida fue:\\
+			\verb@682 610 7882 /home/diego/tp/config@\\
+			El significado de esta salida es que el archivo tiene 682 lineas, 610 palabras y 7882 caracteres.
+
+		  \subsubsection[]{}
+		  \noindent Se ejecut'o el comando:\\
+		    \verb@# sort /etc/passwd >> /home/diego/tp/config@\\
+		  donde \verb@>>@  concatena detr'as de \verb@/home/diego/tp/config@ la salida (stdout) del comando sort.
+
+		  \subsubsection[]{}
+			\noindent Al ejecutar\\
+			  \verb@# wc /home/diego/tp/config@ la salida fue:\\
+			  \verb@705 640 8823 /home/diego/tp/config@\\
+			El significado de esta salida es que el archivo tiene 705 lineas, 640 palabras y 8823 caracteres.
+
+		\subsection{PIPES}
+		\noindent El operador \verb@a1 | a2@ toma el STDOUT del comando a1 y lo envia al STDIN del comando a2.
+		Ejecutando el siguiente comando:\\
+		\verb@# ls -l /usr/bin/a* | grep apt | wc@\\
+		se obtienen la cantidad de caracteres, palabras y lineas que vienen de filtrar el listado de los binarios con las lineas que contengan las palabra \verb@sync@.  La salida obtenida es:	\verb@12 96 853@

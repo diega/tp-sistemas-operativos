@@ -1,0 +1,11 @@
+\section{Scripting}
+\subsection{Enunciado}
+    Escriba un script de shell que sincronice dos carpetas. El script debe recibir las dos carpetas (origen y destino, en ese orden) desde la l'inea de comando, o preguntarlas interactivamente al usuario en caso de no recibirlas. Adem'a, debe aceptar un modificador -r que indica modo de operaci'on recursivo.
+
+    Una vez conocidas las dos carpetas con las que se operar'a, el script deber'a copiar todos los archivos de la carpeta origen que no est'an presentes en la carpeta destino, y adem'as tambi'en deber'a copiar todos los archivos presentes en ambas carpetas que tengan una fecha de modificaci'on posterior en la carpeta origen que en la carpeta destino. De esta manera, al ejecutar el script, estar'a seguro de que la carpeta destino contiene toda la informaci'on de la carpeta origen, excepto lo que fue modificado posteriormente en la carpeta destino.
+
+\subsection{Desarrollo}
+    Se utiliz'o el comando getopts de bash para procesar los par'ametros de entrada al programa. El script chequea la existencia del directorio de origen y respecto del directorio destino, si este no existe, lo crea. 
+    
+    Basicamente se hizo uso extensivo del comando diff y sed, relacionando las salidas de cada uno mediante pipes |.
+    \lstinputlisting[language=bash]{sync_folders.sh}
