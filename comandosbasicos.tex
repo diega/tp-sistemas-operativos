@@ -8,7 +8,7 @@
 
 \section{Comandos B'asicos de UNIX}
 		\subsection{\ttfamily{pwd}}
-      Muestra el nombre del directorio actual. Ejemplo:
+      Muestra el nombre del directorio actual. Ejemplo:\\
       \begin{mylisting}
       \begin{verbatim}        
         $ cd /usr/bin/
@@ -16,16 +16,16 @@
         /usr/bin
         $ cd
         $ pwd
-        /home/diego
+        /home/grupoXX
       \end{verbatim}
       \end{mylisting}
 		Esto ocurre porque el comando \verb@cd@ invocado sin par'ametros establece como directorio actual el indicado por la variable de entorno \verb@$HOME@.
 
 		\subsection{\ttfamily{cat}}
-      Concatena archivos y escribe el resultado en la salida estandar \mbox{(stdout)}. La salida obtenida es:
+      Concatena archivos y escribe el resultado en la salida estandar \mbox{(stdout)}. La salida obtenida es:\\
       \begin{mylisting}			
 			\begin{verbatim}
-        $ cat /home/diego/.profile
+        $ cat /home/grupoXX/.profile
         # ~/.profile: executed by the command interpreter for login shells.
         # This file is not read by bash(1), if ~/.bash_profile or 
         # ~/.bash_login exists.
@@ -49,58 +49,69 @@
         fi
       \end{verbatim}
       \end{mylisting}
-			El archivo \verb@/home/diego/.profile@ se utiliza para personalizar el entorno de ejecuci'on. Usualmente aqu'i se define la variable de entorno \verb@PATH@, una variable cuyo valor indica los directorios d'onde Linux buscar'a cuando se ejecute un comando sin explicitar la ruta de acceso a 'el.
+			El archivo \verb@/home/grupoXX/.profile@ se utiliza para personalizar el entorno de ejecuci'on. Usualmente aqu'i se define la variable de entorno \verb@PATH@, una variable cuyo valor indica los directorios d'onde Linux buscar'a cuando se ejecute un comando sin explicitar la ruta de acceso a 'el.
 			
 			Tambi'en ejecuta el archivo \verb@.bashrc@ para cargar las configuraciones propias del int'erprete de comandos \verb@.bash@.
 
 		\subsection{\ttfamily{find}}
 		  Busca archivos en la estructura de directorios.
-			Para obtener el directorio en el cual se encuentra el archivo \verb@vmlinuz@, podemos invocar el comando \verb@find@ de la siguiente manera:
-			\verb@sudo find / -name vmlinuz -print@
-			
-			De esta forma, se indica que busque el archivo recursivamente desde el directorio \verb@/@, que adem'as se desea buscar los archivos cuyo nombre sea \verb@vmlinuz@, y que los resultados se deben mostrar por la salida est'andar (si no se escribe \verb@-print@, igualmente se muestra el resultado por salida est'andar).
-			
-			La salida obtenida es:
-			\verb@/vmlinuz@
+			\\\\\indent Para obtener el path de los archivos que comienzan con \verb@vmlinuz@, podemos invocar el comando \verb@find@ de la siguiente manera:\\
+
+      \begin{mylisting}
+      \begin{verbatim} 
+			sudo find / -name 'vmlinuz*' -print
+      \end{verbatim}
+      \end{mylisting}
+
+			De esta forma, se indica que busque los archivos recursivamente desde el directorio \verb@/@, que adem'as se desea buscar los archivos cuyo nombre comiencen \verb@vmlinuz@, y que los resultados se deben mostrar por la salida est'andar (si no se escribe \verb@-print@, igualmente se muestra el resultado por salida est'andar).
+			\\\\
+			La salida obtenida es:\\
+
+      \begin{mylisting}
+      \begin{verbatim} 
+			/vmlinuz
+			/boot/vmlinuz-2.6.24-19-virtual
+      \end{verbatim}
+      \end{mylisting}
 
 		\subsection{\ttfamily{mkdir}}
-			Para crear un directorio en el directorio \verb@/home/diego@ el comando se debe invocar de la siguiente manera:
+			Para crear un directorio en el directorio \verb@/home/grupoXX@ el comando se debe invocar de la siguiente manera:
 
-			\verb@mkdir /home/diego/tp@
+			\verb@mkdir /home/grupoXX/tp@
 
 		\subsection{\ttfamily{cp}}
 		
-			Para copiar el archivo \verb@/etc/passwd@ al directorio \verb@/home/diego/tp@, se debe escribir la siguiente instrucci'on:
+			Para copiar el archivo \verb@/etc/passwd@ al directorio \verb@/home/grupoXX/tp@, se debe escribir la siguiente instrucci'on:
 
-			\verb@cp /etc/passwd /home/diego/tp@
+			\verb@cp /etc/passwd /home/grupoXX/tp@
 		
 		\subsection{\ttfamily{chgrp}}
 
-			Para cambiar el grupo al que pertenece el archivo \verb@/home/diego/tp/passwd@ y establecerlo en \emph{diego} se debe ejecutar:
+			Para cambiar el grupo al que pertenece el archivo \verb@/home/grupoXX/tp/passwd@ y establecerlo en \emph{grupoXX} se debe ejecutar:
 
-			\verb@chgrp diego /home/diego/tp/passwd@
+			\verb@chgrp grupoXX /home/grupoXX/tp/passwd@
 
 		\subsection{\ttfamily{chown}}
 
-			Para cambiar el propietario al que pertenece el archivo \verb@/home/diego/tp/passwd@ y establecerlo en \emph{diego} se debe ejecutar:
+			Para cambiar el propietario al que pertenece el archivo \verb@/home/grupoXX/tp/passwd@ y establecerlo en \emph{grupoXX} se debe ejecutar:
 
-			\verb@chown diego /home/diego/tp/passwd@
+			\verb@chown grupoXX /home/grupoXX/tp/passwd@
 
 		\subsection{\ttfamily{chmod}}
 
-			Para que el propietario tenga permisos de lectura, escritura y ejecuci'on sobre el archivo \verb@/home/diego/tp/passwd@ se debe invocar:
+			Para que el propietario tenga permisos de lectura, escritura y ejecuci'on sobre el archivo \verb@/home/grupoXX/tp/passwd@ se debe invocar:
 
-			\verb@chmod u+rwx /home/diego/tp/passwd@
+			\verb@chmod u+rwx /home/grupoXX/tp/passwd@
 		
-			Para que el grupo tenga solo permisos de lectura y ejecuci'on sobre el archivo \verb@/home/diego/tp/passwd@:
+			Para que el grupo tenga solo permisos de lectura y ejecuci'on sobre el archivo \verb@/home/grupoXX/tp/passwd@:
 
-			\verb@chmod g+rx-w /home/diego/tp/passwd@
+			\verb@chmod g+rx-w /home/grupoXX/tp/passwd@
 
 			Es decir, se debe sacar el permiso de escritura.
 		
-			Para que el resto (los que no son ni el propietario ni miembros del grupo) tengan solo permisos de ejecuci'on sobre el archivo \verb@/home/diego/tp/passwd@ se debe invocar:
+			Para que el resto (los que no son ni el propietario ni miembros del grupo) tengan solo permisos de ejecuci'on sobre el archivo \verb@/home/grupoXX/tp/passwd@ se debe invocar:
 
-			\verb@chmod o-r-w+x /home/diego/tp/passwd@
+			\verb@chmod o-r-w+x /home/grupoXX/tp/passwd@
 
 		\subsection{\ttfamily{grep}}
 			Para visualizar las lineas que tienen el texto localhost en el archivo /etc/hosts se ejecuta el comando
@@ -135,9 +146,9 @@ Para que que s'olo muestre el nombre y la ruta de los archivos que contienen el 
 			
 	\subsection{\ttfamily{rm}}
 	
-		Para borrar el archivo \verb@/home/diego/tp/passwd@ se debe invocar \verb@rm@ de la siguiente manera:
+		Para borrar el archivo \verb@/home/grupoXX/tp/passwd@ se debe invocar \verb@rm@ de la siguiente manera:
 
-		\verb@rm /home/diego/tp/passwd@
+		\verb@rm /home/grupoXX/tp/passwd@
 	
 	\subsection{\ttfamily{ln}}
 
@@ -156,7 +167,7 @@ Para que que s'olo muestre el nombre y la ruta de los archivos que contienen el 
 
 		El n'umero 3 indica que hay 3 nombres que referencian a un mismo archivo en memoria. Si se borrase el archivo \verb@/etc/passwd@, lo que se estar'ia borrando ser'ia una referencia al archivo y no el archivo en s'i. La manera de borrar el archivo f'isicamente es eliminando todas las referencias (o \emph{hardlinks} ) que posea.
 
-    Para generar un \emph{soft link} corremos \verb@ln -s /etc/passwd /tmp/contra3@ y se chequea que efectivamente el número 3 antes obtenido sigue igual.
+    Para generar un \emph{soft link} corremos \verb@ln -s /etc/passwd /tmp/contra3@ y se chequea que efectivamente el n'umero 3 antes obtenido sigue igual.
     
 	\subsection{\ttfamily{mount}}
 
@@ -261,7 +272,7 @@ devshm                  127884         0    127884   0% /dev/shm
 			\end{mylisting}
 			
 			Por lo tanto, la cantidad de procesos del sistema es:\\
-			Cantidad total de procesos =Cantidad total de procesos - Cant de procesos del usuario =  35 - 2 = 33
+			Cantidad total de procesos = Cantidad total de procesos totales - Cant de procesos del usuario =  35 - 2 = 33
 		\subsection{\ttfamily{umount}}
 			Desmonte el CD-ROM del directorio \verb@umount /media/cdrom@\\
 			Se ejecuta el comando \verb@umount /dev/scd0@
