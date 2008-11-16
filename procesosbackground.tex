@@ -1,80 +1,33 @@
 \section{Ejecuci'on de procesos en Background}
 \subsection{Enunciado}
-\noindent Crear el siguiente programa
-	\begin{verbatim}
-		#include <stdio.h>
-		int main()
-		{
-			int i,c;
-			while(1)
-			{
-				c = 48 + i;
-				printf("%d", c);
-				i++;
-				i = i % idgrupo;
-			}
-		}
-	\end{verbatim}
-Compilarlo. El programa compilado debe llamarse loop, Indicando a la macro idgrupo el valor
-de su grupo.
-\begin{itemize}
-\item[a)] Correrlo en foreground. Qu'e sucede? Mate el proceso con el comando kill
-\item[b)] Ahora ejec'utelo en background\\
-            \verb|/usr/src/loop > /dev/null &|\\
-            Que se muestra en la pantalla ?
-\end{itemize}
-Qu'e sucede si presiona la tecla F1? Qu'e significan esos datos ?\\
-Qu'e sucede si presiona la tecla F2? Qu'e significan esos datos ?
-
-
+Cree el archivo /home/<usuario>/tp/loop.c. Comp'ilelo con \verb@gcc@. El programa compilado debe llamarse \verb@loop@. 
+\begin{verbatim}
+  #include <stdio.h>
+  #define IDGRUPO 10;
+  int main() {
+    int i,c;
+    while(1) {
+      c = 48 + i;
+      printf("%d", c);
+      i++;
+      i = i % IDGRUPO;
+    }
+    return 0;
+  }
+\end{verbatim}
+\begin{enumerate}
+\item Correrlo en foreground. ?`Qu'e suscede? Mate el proceso con \verb@Ctrl-c@
+\item Ahora ejec'utelo en backgroun \verb|/usr/src/loop > /dev/null &|. Mate el proceso con el comando \verb@kill@
+\end{enumerate}
 \subsection{Desarrollo}
-	Usando el editor \verb@vi@ se cre'o el programa \verb@loop.c@ que se encuentra en la carpeta \verb@/usr/pepeto/06@\\
-	Se compil'o el programa asign'andole a la macro \verb@idgrupo@ el valor 6. El comando ejecutado fue:\\
-	\verb@# cc loop.c -Didgrupo=6 -o loop@
-	\begin{itemize}
-	\item[a)] Al ejecutar el programa \verb@loop@ en foreground se pierde el control de esta terminal, ya que \verb@loop@ es un ciclo infinito. Cada vez que se ejecuta un comando en foreground, la consola queda esperando la finalizaci'on del mismo, siendo imposible realizar otra operaci'on en la misma consola.\\
-		Para recuperar el control de la terminal, nos pasamos a otra terminal, ingresamos como usuario root al sistema y corremos el comando:\\
-		 \verb@# ps -ax | grep loop@\\
-		 el cual nos muestra la informaci'on relacionada con el proceso \verb@loop@. Anotamos su PID (n'umero indentificador de proceso) y ejecutamos\\
-		 \verb@# kill 61@\\
-		 donde 61 es el PID de \verb@loop@.\\
-		Volvemos a la consola 1 observando que el proceso a finalizado mostrando la leyenda \verb@Terminated@.
+Usando el editor \verb@vi@ se cre'o el programa \verb@loop.c@ que se encuentra en la carpeta \verb@/home/grupo6/loop.c@.
+Se compil'o el programa asign'andole a la macro \verb@IDGRUPO@ el valor 6. El comando ejecutado fue: \verb@$gcc loop.c -o loop@\\
+\begin{asparaenum}
+\item Al ejecutar el programa \verb@loop@ en foreground se pierde el control de esta terminal, ya que \verb@loop@ es un ciclo infinito. Cada vez que se ejecuta un comando en foreground, la consola queda esperando la finalizaci'on del mismo, siendo imposible realizar otra operaci'on en la misma consola.\\
+Para recuperar el control de la terminal utilizamos la combinaci'on \verb@Ctrl-c@\\
 
-	\item[b)] Al ejecutar el programa con la sentencia\\
-		 \verb@# ./loop > /dev/null &@\\
-		 la salida standard del mismo es redireccionada a \verb@dev/null@. En definitiva se descarta la salida standard.\\
-		 Con el \verb@&@ estamos indicando que el proceso debe ejecutarse en background. Al ejecutarse en background la consola queda libre para ejecutar cualquier comando a diferencia de la ejecuci'on en foreground, o sea, no espera a que el comando termine su ejecuci'on.\\
-		 La ejecuci'on del programa con esta sentencia nos arroja como resultado inmediato el PID del proceso.\\
-
-		\textbf{Qu'e sucede si presiona la tecla F1?}\\
-		Al presionar la tecla F1 se obtiene la siguiente tabla de procesos activos. 
-		\begin{center}
-			\includegraphics[width=1.00\textwidth]{images/f1.png}
-		\end{center}
-
-		Donde:
-
-		\begin{itemize}
-			\item[pid] Es el identificador de proceso.
-			\item[sp] Es el puntero al stack del proceso.
-			\item[flag] Es el registro flag del procesador.
-			\item[user] Es el tiempo (de usuario) que lleva el proceso corriendo en el sistema.
-			\item[text] Es el puntero al principio del segmento de c'odigo del proceso.
-			\item[data] Es el puntero al principio del segmento de datos del proceso. Este valor coincide con el anterior pues en Minix los procesos comparten un bloque de memoria que se asigna y libera como una unidad.
-			\item[Size] Es el tama~no de pila asignado al proceso.
-			\item[command] Muestra el nombre del comando con el cual se invoc'o al proceso.
-		\end{itemize}
-		\textbf{Que sucede si presiona la tecla F2?}\\
-		Al presionar la tecla F2 se obtiene el mapa de memoria de los procesos. 
-		\begin{center}
-			\includegraphics[width=1.00\textwidth]{images/f2.png}
-		\end{center}
-		Donde:
-
-		\begin{itemize}
-			\item[PROC] Es un n'umero asignado al proceso.
-			\item[NAME] Es el nombre que poseen en el BCP.
-			\item[TEXT, DATA, STACK] Muestran las entradas del arreglo \verb@mp_seg@ definido en \verb@/usr/src/mm/mproc.h@, la tabla de procesos del administrador de memoria. Cada entrada es una estructura que contiene la direcci'on virtual, la direcci'on f'isica y la longitud del segmento, todas medidas en clics (t'ipicamente 256 bytes).
-			\item[SIZE] Es el tama~no que ocupa el proceso en memoria.
-		\end{itemize}
-	\end{itemize}
+\item Al ejecutar el programa con la sentencia \verb@$ ./loop > /dev/null &@ la salida standard del mismo es redireccionada a \verb@dev/null@. En definitiva se descarta la salida standard.\\
+Con el \verb@&@ estamos indicando que el proceso debe ejecutarse en background. Al ejecutarse en background la consola queda libre para ejecutar cualquier comando a diferencia de la ejecuci'on en foreground, o sea, no espera a que el comando termine su ejecuci'on.\\
+La ejecuci'on del programa con esta sentencia nos arroja como resultado inmediato el PID del proceso.\\
+Utilizando el comando \verb@kill@ m'as el PID antes obtenido podemos matar el proceso.
+\end{asparaenum}
