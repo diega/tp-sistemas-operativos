@@ -1,21 +1,19 @@
 \documentclass[a4paper,11pt,pdftex]{article}
-\author{Diego L'opez Le'on}
-\title{Trabajo Pr'actico Linux}
+\usepackage{latexsym}
+\usepackage[activeacute,spanish]{babel}
+\usepackage[latin1]{inputenc}
 
-\RequirePackage[colorlinks,hyperindex]{hyperref}		% links automaticos, color etc...
-\usepackage[ansinew]{inputenc}					% (input_encoding)acentos, e~nes, etc...
-\usepackage[spanish, activeacute]{babel}			% para trabajar con multiples lenguas
-\usepackage{caratula}
-\usepackage{indentfirst}
-\usepackage{graphicx}
+\usepackage[colorlinks,hyperindex]{hyperref}
 \usepackage{listings}
-\def\sotitulo#1{\noindent \underline{\textbf{#1}}}		% para hacer un titulo facilmente
-\def\todo#1{\\ \huge \textbf{#1} \normalsize \\}		% para hacer TODOs
-\def\rta{\noindent \textbf{Rta.:}\\}				% para automatizar el formato de Respuestas
+\usepackage{caratula}
+\usepackage{paralist}
+
+\author{Diego L\'opez Le\'on}
+\title{Trabajo Pr\'actico Linux}
 
 %indica que el encabezado lo voy a personalizar con \markboth{}{}
-\pagestyle{myheadings}
-\markboth{}{Trabajo Pr'actico Linux - Sistemas Operativos}
+%\pagestyle{myheadings}
+%\markboth{}{Trabajo Pr'actico Linux - Sistemas Operativos}
 
 \begin{document}
 
@@ -31,7 +29,7 @@
 \input{comandosbasicos.tex}
 \input{stdoutypipes.tex}
 \input{scripting.tex}
-%\input{procesosbackground.tex}
+\input{procesosbackground.tex}
 \newpage
 \input{thebibliography.tex}
 
