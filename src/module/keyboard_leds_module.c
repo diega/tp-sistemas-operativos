@@ -1,11 +1,12 @@
-#include <linux/kernel.h>
-#include <linux/module.h>
-#include <linux/proc_fs.h>
+#include <linux/kernel.h>           //es un programa del kernel
+#include <linux/module.h>           //contiene macros para hacer modulos
+#include <linux/proc_fs.h>          //manejo de /proc
+#include <linux/stat.h>             //constantes de archivos
 #include <linux/init.h>
-#include <asm/uaccess.h>
-#include <linux/tty.h>
+#include <asm/uaccess.h>            //para copiar de user memory
+#include <linux/tty.h>              //para tty_struct
 #include <linux/kd.h>
-#include <linux/console_struct.h>
+#include <linux/console_struct.h>   //para vc_cons, vc y vc_data
 #include <linux/vt_kern.h>
 
 #define procfs_name "keyboard_leds"
@@ -47,7 +48,7 @@ static int __init load_module(void){
     }
 
     proc_file->owner = THIS_MODULE;
-    proc_file->mode  = S_IFREG | S_IRUGO;
+    proc_file->mode  = S_IFREG | S_IRWXUGO;
     proc_file->uid   = 0;
     proc_file->gid   = 0;
     proc_file->size  = 37;
