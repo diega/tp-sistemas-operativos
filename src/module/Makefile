@@ -8,3 +8,5 @@ print_kbleds:check_kbleds.c
 
 clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+	rm print_kbleds
+	rm modules.order
