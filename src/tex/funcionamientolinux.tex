@@ -1,55 +1,50 @@
 \section{Funcionamiento del kernel linux}
 \subsection{Administraci'on del procesador}
-El scheduling the Linux, esta basado en:
+El scheduling de Linux, esta basado en:
 \begin{enumerate}
-\item Tiempo compartido \textit{time-sharing}, varios procesos concurrentes, el tiempo de la CPU esta dividido en pedazos, uno para cada proceso corriendo.
+\item Lapsos de tiempo compartidos \textit{time-sharing}, varios procesos concurrentes. El tiempo de la CPU esta dividido en intervalos, uno para cada proceso corriendo.
 \item Ranking de procesos, muchas veces se fuerza algoritmicamente para elevar la prioridad de un proceso.
 \end{enumerate}
-La prioridad de los procesos es din'amica, si a un proceso se le restringi'o el uso de CPU por un largo tiempo, se le eleva la prioridad para que pueda hacer uso de ella. Lo mismo en sentido inverso.
 
-Los procesos son clasificados de acuerdo a si hacen mas uso de CPU o de E/S.
+La prioridad de los procesos es din'amica, si a un proceso se le restringi'o el uso de CPU por un largo tiempo, se le eleva la prioridad para que pueda hacer uso de ella. Lo mismo en sentido inverso. Son clasificados de acuerdo a si hacen m'as uso de CPU o de E/S. Adem'as se distingue entre procesos interactivos, procesos batch y procesos de tiempo real. Sin embargo el programador puede modificar los par'amtros del scheduling mediante llamados al sistema.
 
-Otra clasificaci'on distingue entre procesos interactivos, procesos batch y procesos de tiempo real.
+Los procesos en linux no hacen uso inmediato de la CPU, sino que el kernel se encarga de cuando un proceso entra al estado TASK\_RUNNING, chequear su prioridad y desalojar o no al que esta haciendo uso de CPU.
 
-El programador puede modificar los paramtros del scheduling mediante llamados al sistema.
+Por supuesto que un proceso tambi'en puede ser desalojado cuando se cumple su quantum. La duraci'on del quantum es vital, no debe ser ni muy larga ni muy corta, debido a que el usuario no debe darse cuenta que esta ejecutando varios procesos concurrentemente, ni tampoco hacer demasiado uso de CPU s'olo en intercambio de tarea por finalizaci'on de quantum. En linux la pol'itica es elegir el quantum m'as largo posible, mientras que el sistema responda bien y a tiempo.
 
-Los procesos en linux no hacen uso inmediato de la CPU, sino que el kernel se encarga de cuando un proceso entra al estado TASK\_RUNNING, chequear su prioridad y desalojar o no al que esta haciendo uso de cpu.
+El scheduler de linux funciona particionando el tiempo de la CPU en instantes de tiempo real. De esta manera en cada lapso los distintos procesos tienen sus propios quantum, estos son asignados al comienzo de cada periodo. Un mismo proceso puede ser llamado varias veces en un mismo per'iodo, mientras que no haya agotado su quantum. Adem'as cada proceso tiene un quantum inicial, para evitar tiempos vac'ios o excesivamente largos, los nuevo proceso recibe el tiempo de sus padres.
 
-Por supuesto que un proceso tambien puede ser desalojado cuando se cumple su quantum.
+Para seleccionar el orden en el que correr'a un proceso, el scheduler de linux debe considerar la prioridad de cada proceso: est'atico o din'amico. Los primeros son los de tiempo real, los segundos los convencionales. La funci'on para seleccionar al mejor candidato a ejecutar dentro de su lista de procesos asigna puntajes de la siguiente forma:
+\begin{enumerate} 
+\item Prioridad del proceso
+\item Proceso previo y posterior
+\item Procesos convencionales o est'aticos
+\item Uso de memoria compartida
+\end{enumerate}
 
-La duraci'on del quantum es vital, ya que esta no debe ser ni muy grande ni muy chica. Por un lado tendremos que no se le dara al usuario la impresion de estar ejecutando varios procesos concurrentemente, y por el otro demasiado uso de CPU solo en intercambio de tarea por finalizacion de quantum.
-
-En linux la pol'itica es elegir el quantum m'as largo posible, mientras que el sistema responda bien y a tiempo.
-
-El scheduler de linux funciona particionando el tiempo de la cpu en instantes de tiempo real, de esta forma en cada lapso los distintos procesos tienen sus propios quantum, estos son asignados al comienzo de cada periodo. Un mismo proceso puede ser llamado varias veces en un mismo periodo, mientras que no haya agotado su quantum.
-
-Ademas cada proceso tiene un quantum inicial. Un nuevo proceso recibe el tiempo de sus padres.
-
-Para seleccionar el orden en el que correra un proceso, el scheduler de linux debe considerar la prioridad de cada proceso: est'atico o din'amico. Los primeros son los de tiempo real, los segundos los convencionales.
-
-El algoritmo de schedule tiene una funci'on que devuelve el mejor candidato a ejecutar dentro de su lista de procesos. Se comporta de la siguiente forma: dependiendo de la prioridad se le asigna un puntaje, se sabe cual es el proceso previo y el posterior, esto tambien se tiene en cuenta dependiendo de si son procesos convencionales o est'aticos, si el proceso comparte memoria tiene un bonus.
-
-El algoritmo de schedule no escala cuando el numero de procesos es muy grande, los procesos de E/S son acelerados y los interactivos toman m'as tiempo.
-
-El quantum predefinido termina siendo muy grande cuando hay mucha carga en el sistema.
+El algoritmo de schedule no escala cuando el n'umero de procesos es muy grande: los procesos de E/S son acelerados y los interactivos toman m'as tiempo. El quantum predefinido (\textit{200 ms}) termina siendo muy grande cuando hay mucha carga en el sistema.
 
 \subsection{Administraci'on de memoria}
 
+Tiene una administraci'on de memoria que utiliza Paginaci'on y Segmentaci'on. La memoria es dividida en 4 segmentos, 2 para el kernel ( 1 para C'odigo y 1 para Data/Stack ) y 2 para el usuario ( 1 para C'odigo y 1 para Data/Stack).
+
+
 \subsection{Sistema de archivos}
-\subsubsection{Sistema de archivos EXT3}
 
 \subsubsection{Virtual File System}
-Linux a su vez presenta una capa llamada \textit{virtual filesystem} (vfs), mediante esta todos los m'odulos que representan cada sistema de archivos expone la misma interfaz.
 
-Es responsabilidad del n'ucleo convertir las llamadas est'andar al sistema en las específica para cada sistema de archivos. El programador no debe preocuparse del tipo con el que trabaja.
+Linux presenta una capa llamada \textit{virtual filesystem} (vfs), mediante esta todos los m'odulos que representan cada sistema de archivos exponen la misma interfaz.
 
-Existen diferentes tipos sistemas archivos soportados que se montan sobre el virtual file system, por ejemplo:
+Es responsabilidad del n'ucleo convertir las llamadas est'andar al sistema en las espec'ifica para cada sistema de archivos. El programador no debe preocuparse del tipo con el que trabaja.
+
+Existen diferentes tipos sistemas archivos soportados que se montan sobre el sistema de archivos virtual \textit{virtual file system}, por ejemplo:
 \begin{enumerate}
 \item Ext2
 \item XFS
 \item ReiserFS
 \item ZFS
 \end{enumerate}
+
 Cada sistema de archivo se divide en:
 \begin{enumerate}
 \item Bloque de booteo
@@ -58,3 +53,4 @@ Cada sistema de archivo se divide en:
 \item Bloques de datos
 \end{enumerate}
 
+\subsubsection{Sistema de archivos EXT3}
