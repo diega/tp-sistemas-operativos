@@ -1,9 +1,13 @@
 \section{IPC y sincronizaci'on}
 \subsection{Pipes}
 Para crear un archivo de pipe utilizamos la \textit{system call} \texttt{pipe()}. Esta toma un solo argumento que es un array de dos enteros que, luego de correrla y si no ocurre alg'un error, contendr'a dos \textit{file descriptors} para usar en el \textit{pipeline} (o tuber'ia). El primer entero en el array (elemento 0) est'a abierto para ser le'ido, mientras que el segundo entero (elemento 1) lo est'a para ser escrito; nos referiremos usualmente a estos archivos como fd0 y fd1. En una representaci'on m'as visual podr'iamos decir que la salida de fd1 se convierte en la entrada de fd0.
+
 Si usamos pipes para comunicar procesos quien quiera leer del pipe debe cerrar fd1 y quien escriba debe hacer lo mismo con fd0. Es importante siempre cerrar el extremo del pipe que no estemos utilizando.
+
 Luego de crear el pipe, mediante la instrucci'on \texttt{fork()}, creamos un nuevo thread sabiendo que estos heredan los file descritors abiertos de sus padres. Con esta facilidad la comunicaci'on es sencilla.
+
 La operaci'on de lectura sobre el pipe quedar'a bloqueada hasta que alguien escriba en 'el. Este comportamiento es explotado por nosotros para desarrollar la mutua exclusi'on sobre alguna zona cr'itica.
+
 Nuestra implementaci'on particular crea dos threads permitiendo que el primero ejecute la zona cr'itica, cuya finalizaci'on ser'a informada al hermano mediante la escritura del pipe. 
 \lstinputlisting[language=C,breaklines]{../c/pipes.c}
 
