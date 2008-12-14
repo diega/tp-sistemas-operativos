@@ -110,25 +110,67 @@ Como vemos este m'etodo es un poco complicado pero con este m'etodo se permite u
 				
 					\item Disponibilidad
 						\\
-						\\En ext2 al volver luego de una caida inesperada del sistema se debe comprobar cada sistema de archivos ext2 montados en la m'aquina para ver si son consistentes. Este proceso de comprobación lleva mucho tiempo pudiendo prolongar el tiempo de arranque de un modo significativo, especialmente si hay un elevado n'umero de ficheros en algunos de los "discos". Durante el proceso no se tiene acceso a los datos de los vol'umenes.
+						\\En ext2 al volver luego de una caida inesperada del sistema se debe comprobar el sistema de archivos para verificar su consistencia. Este proceso de comprobación puede llevar mucho tiempo pudiendo prolongar el tiempo de arranque de un modo significativo, incluso por varios minutos si hay muchos archivos, ya que durante este proceso no se tiene acceso a los datos del disco.
 						\\
-						\\En ext3, con la caracter'istica journaling del sistema de ficheros, deja de ser necesario este tipo de comprobaci'on en el sistema de archivos despu'es de cada caida inesperada del sistema. 'Unicamente se necesita realizar una comprobaci'on de consistencia luego de determinados errores de hardware, como ser, fallos en el disco duro. Sin embargo, el tiempo de recuperaci'on de un sistema de archivos ext3 tras un cierre no limpio del sistema no depende del tamaño del sistema de archivos ni del n'umero de archivos, sino del tamaño del "diario" (journal) empleado para mantener la consistencia en el sistema. Por lo general, la recuperaci'on tarda alrededor de un segundo, dependiendo del hardware.
+						\\En ext3, en cambio, debido a la caracter'istica de journaling, deja de ser necesario este tipo de comprobaci'on en el sistema de archivos despu'es de cada caida inesperada del sistema. Esto se debe a que los datos son escritos en el disco de manera tal que el sistema de archivos siempre este consistente. 'Unicamente se necesita realizar una comprobaci'on de consistencia luego de determinados errores de hardware, como ser, fallos en el disco duro, que se dan raramente.
+						\\El tiempo de recuperaci'on de un sistema de archivos ext3 tras una ca'ida del sistema no depende del tamaño del sistema de archivos ni del n'umero de archivos, sino del tamaño del "diario o journal" (journal) empleado para mantener la consistencia en el sistema. Por lo general, dado el tamaño asignado para el journal, la recuperaci'on tarda alrededor de un segundo (aunque depende de la velocidad del hardware).
 
 					\item Integridad de los datos
 						\\
-						\\Ext3 proporciona una mayor integridad de los datos al producirse un cierre no limpio del sistema. Este sistema de archivos permite seleccionar tipo y nivel de la protección de los datos. Por defecto, este nivel suele ser elevado en relación con el estado del sistema de archivos.
+						\\Ext3 proporciona una mayor garant'ia de integridad de los datos al producirse un cierre incorrecto del sistema. Permitiendo seleccionar tipo y nivel de la protección de los datos. Se puede seleccionar mantener la consistencia de los datos
+pero permitiendo daños en los datos dentro del sistema de archivos en el caso de apagado incorrecto, lo que puede permitir un pequeño aumento de la velocidad bajo algunas circunstancias. Por defecto, este nivel sueler ser elevado en relación con el estado del sistema de archivos. Por otro lado, esta la opci'on de asegurar que los datos sean consistentes con el estado del sistema de archivos, lo que significa que nunca habr'a "datos basura" de un archivo escrito poco antes de una caída del sistema luego de esta.
+Esta ultima opción es la utilizada por defecto.
+						\\EL ext3 escribe tres tipos de bloques de datos en el registro:
 
+						\begin{asparaenum}
+							\item Meta-información: Contiene el bloque de meta-información que está siendo actualizado por la transacción. Cada cambio en el sistema de archivos es escrito en el registro. Sin embargo esto es relativamente barato ya que varias operaciones de E/S pueden ser agrupadas en conjuntos y ser escritas directamente desde el sistema page-cache.
+							\item Bloques descriptores: Estos bloques son los que describen a otros bloques del registro para luego poder ser copiados al sistema principal. Los cambios en estos bloques se escriben antes de los de meta-información.
+							\item Bloques cabeceras: Describen la cabecera y cola del registro más un número de secuencia para garantizar el orden de escritura durante la recuperación del sistema de archivos.
+							\end{asparaenum}
+							
+							Con ext3 se mantiene la consistencia tanto en la meta-información (i-nodos o metadatos) como en los datos de los ficheros (datos). A diferencia de los demás sistemas de journaling, la consistencia de los datos también está asegurada.
+						
 					\item Velocidad
 						\\
-						\\EXT3, adem'as de permitir escribir datos m'as de una vez, en la mayor parte de los casos su rendimiento es superior al de ext2 porque los "diarios o journals" de ext3 optimizan el movimiento de las cabezas de los discos duros. Permite, incluso, seleccionarse 3 modos de journaling para optimizar la velocidad, sin embargo, la integridad de los datos ser'a afectada.
+						\\EXT3, a pesar de permitir escribir datos m'as de una vez, en la mayor parte de los casos su rendimiento es superior al de ext2 porque los "diarios o journals" de ext3 optimizan el movimiento de las cabezas de los discos duros.
+						\\EXT3 permite, seleccionarse 3 modos de journaling para optimizar la velocidad pero seg'un la elecci'on la integridad de los datos ser'a afectada.
+						
+						Los diferentes modos son:
 
-					\item Fácil transición
+							\begin{itemize}
+							\item data=writeback: limita la garantía de integridad de los datos, permitiendo a los antiguos datos aparecer en ficheros después de una caída, para un posible pequeño incremento de la velocidad en algunas circunstancias. Este es el modo journaling por defecto en muchos otros sistemas de archivos de journaling. Proporciona las garantías más limitadas de integridad de datos y evita el chequeo en el reinicio del sistema.
+
+							\item data=ordered (modo por defecto): garantiza que los datos son consistentes con el sistema de archivos. Los archivos escritos recientemente nunca aparecerán con contenidos basura después de una caída.
+
+							\item data=journal: requiere un "journal" grande para una velocidad razonable en la mayoría de los casos y por lo tanto tarda más tiempo recuperando el sistema en el caso de un apagadp incorrecto, pero en algunos casos es más rápido para algunas operaciones ya que funciona muy bien si se escriben muchos datos al mismo tiempo (por ejemplo en los spools de correo o servidores NFS sincronizados). As'i mismo, utilizar este modo para un uso normal resulta frecuentemente un poco más lento.
+							\end{itemize}
+						
+					\item F'acil migraci'on
 						\\
-						\\El pasaje de ext2 a ext3 (y viceversa) es muy sencillo pudi'endose aprovechar las ventajas de un s'olido sistema de ficheros con journaling sin tener que volver a dar formato al sistema.
+						\\Las particiones ext3 tienen la misma estructura de archivos a la de ext2, lo que permite no s'olo pasar de ext2 a ext3, sino que lo opuesto tambi'en funciona, lo que es 'util sobre todo si en alg'un caso el registro se corrompe accidentalmente, por ejemplo debido a sectores defectuosos del disco.
+						\\As'i mismo s'olo se puede pasar de ext3 a ext2 cuando la partici'on ext3 ha sido anteriormente desmontada correctamente, sino se puede perder la informaci'on de journal necesaria para recuperar el sistema de un apagado incorrecto.
 						
 					\end{itemize}
 					
 				Como desventaja podemos citar qque su velocidad y escalabilidad son menores que las de sus competidores (por ejemplo: JFS, ReiserFS o XFS). Sin embargo, repetimos, tiene la ventaja de permitir actualizar de ext2 a ext3 sin perder los datos almacenados ni formatear el disco, y un menor consumo de CPU.
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 				
 				
 				
