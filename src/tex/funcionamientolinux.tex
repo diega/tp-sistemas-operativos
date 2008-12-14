@@ -4,11 +4,11 @@
 Linux es un sistema operativo que permite la multitarea o multiprogramaci'on, es por esto que en el n'ucleo existe una funci'on que se encarga de la organizaci'on de los procesos. En el transcurso de la ejecuci'on un proceso en Linux puede pasar por cinco estados diferentes. Estos estados son:
 
 \begin{itemize}
-	\item En ejecuci'on: el proceso es ejecutado por el procesador.
-	\item A punto: el proceso podr'ia ser ejecutado pero otro proceso se est'a ejecutando en ese momento.
-	\item Suspendido: el proceso est'a en espera de un recurso.
-	\item Parado: el proceso ha sido suspendido por una intervenci'on externa.
-	\item Zombi: el proceso ha terminado su ejecuci'on pero sigue siendo referenciado en el sistema.
+	\item Ejecutando (Executing): el proceso es ejecutado por el procesador.
+	\item Listo (Ready): el proceso podr'ia ser ejecutado pero otro proceso se est'a ejecutando en ese momento.
+	\item Suspendido (Suspended): el proceso est'a en espera de un recurso.
+	\item Detenido (Stopped): el proceso ha sido suspendido por una intervenci'on externa.
+	\item Zombi (Zombie): el proceso ha terminado su ejecuci'on pero sigue siendo referenciado en el sistema.
 \end{itemize}
 
 Los atributos que el sistema mantiene mientras un proceso se esta ejecutando son: el estado, el valor de los registros, la identidad del usuario que lo ejecuta, la informacion utilizada por el n'ucleo para proceder al ordenamiento de los procesos (prioridad), la informaci'on respecto del espacio de direccionamiento del proceso (segmentos de c'odigo, de datos, de pila), informaci'on respecto a las entradas/salidas efectuadas por el proceso e informaci'on que resume los recursos utilizados por el proceso.
