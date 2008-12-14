@@ -6,10 +6,18 @@ Linux es un sistema operativo que permite la multitarea o multiprogramaci'on, es
 \begin{itemize}
 	\item Ejecutando (Executing): el proceso es ejecutado por el procesador.
 	\item Listo (Ready): el proceso podr'ia ser ejecutado pero otro proceso se est'a ejecutando en ese momento.
-	\item Suspendido (Suspended): el proceso est'a en espera de un recurso.
+	\item Suspendido (Suspended): el proceso est'a en espera de un recurso. (Bloqueado por E/S.)
 	\item Detenido (Stopped): el proceso ha sido suspendido por una intervenci'on externa.
 	\item Zombi (Zombie): el proceso ha terminado su ejecuci'on pero sigue siendo referenciado en el sistema.
 \end{itemize}
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{TransicionEstados.PNG} \\
+Diagrama de Transici'on de Estados de Procesos \\
+\end{figure}
+
 
 Los atributos que el sistema mantiene mientras un proceso se esta ejecutando son: el estado, el valor de los registros, la identidad del usuario que lo ejecuta, la informacion utilizada por el n'ucleo para proceder al ordenamiento de los procesos (prioridad), la informaci'on respecto del espacio de direccionamiento del proceso (segmentos de c'odigo, de datos, de pila), informaci'on respecto a las entradas/salidas efectuadas por el proceso e informaci'on que resume los recursos utilizados por el proceso.
 La forma que posee Linux para ejecutar varios procesos es muy parecida a la que poseen los dem'as sistemas operativos que admiten la multiprogramaci'on. El sistema mantiene una lista de procesos \emph{a punto} que podr'ia ejecutar y procede peri'odicamente a un ordenamiento. A cada proceso se le atribuye un lapso de tiempo. Linux elige un proceso a ejecutar, y le deja ejecutarse durante ese lapso. Cuando ha transcurrido, el sistema hace pasar al proceso actual al estado \emph{a punto}, y elige otro proceso que ejecuta durante otro lapso. El lapso de tiempo es muy corto y el usuario tiene la impresi'on que varios procesos se ejecutan simultaneamente, aunque s'olo un proceso se ejecuta en un instante dado. Se dice que los procesos se ejecutan en pseudoparalelismo.
@@ -44,12 +52,13 @@ Al estar cargados en memoria varios procesos, se pueden producir problemas en cu
 Linux utiliza los mecanismos de memoria virtual proporcionados por el procesador sobre el que se ejecuta. Las direcciones manipuladas por el n'ucleo y los procesos son direcciones virtuales y el procesador efect'ua una conversi'on para transformar una direcci'on virtual en direcci'on f'isica en memoria central.
 El mecanismo de conversi'on es el siguiente: una direcci'on de memoria se descompone en dos partes, un n'umero de p'agina y un desplazamiento en la p'agina. El n'umero de p'agina se utiliza como 'indice en una tabla, llamada tabla de p'aginas, lo que proporciona una direcci'on f'isica de p'agina en memoria central. A esta direcci'on se le añade el desplazamiento para obtener la direcci'on f'isica de la palabra de memoria en concreto.
 Debido al tamaño del espacio de memoria direccionable por los procesadores, la tabla de p'aginas raramente se implementa en forma de una sola tabla contigua en memoria. Como la tabla de p'aginas debe ser residente en memoria, necesitar'ia un exceso de memoria para esta tabla. Por esta raz'on la tabla de p'aginas a menudo se descompone en varios niveles, con un m'inimo de 2.
-%En el siguiente dibujo se puede observar esta descomposici'on.
 
-%\begin{figure}[h]
-%\centering
-%\includegraphics[scale=0.5]{imagememory.png}
-%\end{figure}
+En el siguiente dibujo se puede observar esta descomposici'on.
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{imagememory.PNG}
+\end{figure}
 
 El inter'es de esta tabla de p'aginas por niveles se basa en que la tabla de p'aginas no necesita cargarse completamente en memoria.
 Linux gestiona la memoria central y las tablas de p'aginas utilizadas para convertir las direcciones virtuales en direcciones f'isicas. Implementa una gesti'on de memoria que es ampliamente independiente del procesador sobre el que se ejecuta.
