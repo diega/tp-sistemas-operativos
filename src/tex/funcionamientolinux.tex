@@ -14,10 +14,9 @@ Linux es un sistema operativo que permite la multitarea o multiprogramaci'on, es
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.5]{TransicionEstados.png} \\
-Diagrama de Transici'on de Estados de Procesos \\
+\includegraphics[scale=0.5]{TransicionEstados.png} 
+Diagrama de Transici'on de Estados de Procesos 
 \end{figure}
-
 
 Los atributos que el sistema mantiene mientras un proceso se esta ejecutando son: el estado, el valor de los registros, la identidad del usuario que lo ejecuta, la informacion utilizada por el n'ucleo para proceder al ordenamiento de los procesos (prioridad), la informaci'on respecto del espacio de direccionamiento del proceso (segmentos de c'odigo, de datos, de pila), informaci'on respecto a las entradas/salidas efectuadas por el proceso e informaci'on que resume los recursos utilizados por el proceso.
 La forma que posee Linux para ejecutar varios procesos es muy parecida a la que poseen los dem'as sistemas operativos que admiten la multiprogramaci'on. El sistema mantiene una lista de procesos \textit{ready} que podr'ia ejecutar y procede peri'odicamente a un ordenamiento. A cada proceso se le atribuye un lapso de tiempo. Linux elige un proceso a ejecutar, y le deja ejecutarse durante ese lapso. Cuando ha transcurrido, el sistema hace pasar al proceso actual al estado \emph{ready}, y elige otro proceso que ejecuta durante otro lapso. El lapso de tiempo es muy corto y el usuario tiene la impresi'on que varios procesos se ejecutan simultaneamente, aunque s'olo un proceso se ejecuta en un instante dado. Se dice que los procesos se ejecutan en pseudoparalelismo.
@@ -83,92 +82,75 @@ Cuando una p'agina se escribe en un dispositivo de swap, se le atribuye una dire
 
 \paragraph{Asignaci'on de Memoria}
 Hasta el momento hemos visto como Linux utiliza una memoria paginada y unos elementos para poder realizar una utilizaci'on 'optima de la memoria pero no hemos hablado de qu'e algoritmo o estrategia utiliza para asignar la memoria. Para llevar la cuenta de como est'a la memoria en cada momento Linux no utiliza una lista simple, Linux utiliza el principio del Buddy system. Su principio es bastante simple: el n'ucleo mantiene una lista de grupos de p'aginas. Estos grupos son de tamano fijo y se refieren a p'aginas contiguas en memoria.
-El principio b'asico del Buddy system es el siguiente: para cada petici'on de asignaci'on, se usa la lista no vac'ia que contiene los grupos de p'aginas de tama~no inmediatamente superior al tamano especificado, y se selecciona un grupo de p'aginas de esta lista. Este grupo se descompone en dos partes: las p'aginas correspondientes al tamaño de memoria especificado, y el resto de p'aginas que siguen disponibles. Este resto puede insertarse en las otras listas.
+El principio b'asico del Buddy system es el siguiente: para cada petici'on de asignaci'on, se usa la lista no vac'ia que contiene los grupos de p'aginas de tama~no inmediatamente superior al tamano especificado, y se selecciona un grupo de p'aginas de esta lista. Este grupo se descompone en dos partes: las p'aginas correspondientes al tamano de memoria especificado, y el resto de p'aginas que siguen disponibles. Este resto puede insertarse en las otras listas.
 Al liberar un grupo de p'aginas, el n'ucleo intenta fusionar este grupo con los grupos disponibles, a fin de obtener un grupo disponible de tamano m'aximo.
 Para simplificar la asignaci'on y liberaci'on de un grupo de p'aginas, el n'ucleo s'olo permite designar grupos de p'aginas cuyo tamano sea predeterminado y corresponda a los tama~nos gestionados en las listas.
 Como vemos este m'etodo es un poco complicado pero con este m'etodo se permite una mejor utilizaci'on de la memoria.
 
-
-		\subsubsection{Sistema de Archivos de UBUNTU}
-
-			Ubuntu 8.04.1 usa por defecto el filesystem ext3 y es el que usamos en nuestra imagen:
-			
+\subsubsection{Sistema de Archivos de UBUNTU}
+Ubuntu 8.10 usa por defecto el filesystem ext3 y es el que usamos en nuestra imagen:		
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.5]{versionUsadaDeFS.png}
 \end{figure}
+\textbf{EXT3 (third extended filesystem)}
 
-			\textbf{EXT3 (third extended filesystem)\\}
+El sistema de archivos ext3 es una extensi'on con journalism (registro por diario) del sistema de archivos estandar de linux ext2. El agregado del journaling resulta en una reducci'on masiva del tiempo dedicado a la recuperaci'on del sistema de archivos despues de una caida, lo que lo hace de gran utilidad en entornos donde la alta diponibilidad es muy importante, no solo para mejorar los tiempos de recuperaci'on en m'aquinas independientes sino tambi'en para permitir que la caida del sistema de archivos de una m'aquina sea recuperado por otra m'aquina cuando se tiene un cluster de nodos con un disco compartido. Esto tambi'en posibilita que el sistema de archivos ca'ido de una m'aquina (por ej. un servidor) est'e disponible lo m'as velozmente posible para el resto de m'quinas de la red.
 
-				El sistema de archivos ext3 es una extensi'on con journalism (registro por diario) del sistema de archivos estandar de linux ext2. El agregado del journaling resulta en una reducci'on masiva del tiempo dedicado a la recuperaci'on del sistema de archivos despues de una caida, lo que lo hace de gran utilidad en entornos donde la alta diponibilidad es muy importante, no solo para mejorar los tiempos de recuperaci'on en m'aquinas independientes sino tambi'en para permitir que la caida del sistema de archivos de una m'aquina sea recuperado por otra m'aquina cuando se tiene un cluster de nodos con un disco compartido. Esto tambi'en posibilita que el sistema de archivos ca'ido de una m'aquina (por ej. un servidor) est'e disponible lo m'as velozmente posible para el resto de m'quinas de la red.
-				\\
-				\\Aunque el journalism es la caracter'istica m'as sobresaliente de este sistema sobre ext2, no es su 'unico agregado, sino que se le han incorporado 'indices en 'arbol para directorios que ocupan múltiples bloques, y crecimiento online del silesystem.
-				\\
-				\\Las mejoras introducidas proporcionan las siguientes ventajas:
-				\\
-				\begin{itemize}
-				
-					\item Disponibilidad
-						\\
-						\\En ext2 al volver luego de una caida inesperada del sistema se debe comprobar el sistema de archivos para verificar su consistencia. Este proceso de comprobación puede llevar mucho tiempo pudiendo prolongar el tiempo de arranque de un modo significativo, incluso por varios minutos si hay muchos archivos, ya que durante este proceso no se tiene acceso a los datos del disco.
-						\\
-						\\En ext3, en cambio, debido a la caracter'istica de journaling, deja de ser necesario este tipo de comprobaci'on en el sistema de archivos despu'es de cada caida inesperada del sistema. Esto se debe a que los datos son escritos en el disco de manera tal que el sistema de archivos siempre este consistente. 'Unicamente se necesita realizar una comprobaci'on de consistencia luego de determinados errores de hardware, como ser, fallos en el disco duro, que se dan raramente.
-						\\El tiempo de recuperaci'on de un sistema de archivos ext3 tras una ca'ida del sistema no depende del tamaño del sistema de archivos ni del n'umero de archivos, sino del tamaño del "diario o journal" (journal) empleado para mantener la consistencia en el sistema. Por lo general, dado el tamaño asignado para el journal, la recuperaci'on tarda alrededor de un segundo (aunque depende de la velocidad del hardware).
+Aunque el journalism es la caracter'istica m'as sobresaliente de este sistema sobre ext2, no es su 'unico agregado, sino que se le han incorporado 'indices en 'arbol para directorios que ocupan m'ultiples bloques, y crecimiento online del silesystem.
 
-					\item Integridad de los datos
-						\\
-						\\Ext3 proporciona una mayor garant'ia de integridad de los datos al producirse un cierre incorrecto del sistema. Permitiendo seleccionar tipo y nivel de la protección de los datos. Se puede seleccionar mantener la consistencia de los datos
-pero permitiendo daños en los datos dentro del sistema de archivos en el caso de apagado incorrecto, lo que puede permitir un pequeño aumento de la velocidad bajo algunas circunstancias. Por defecto, este nivel sueler ser elevado en relación con el estado del sistema de archivos. Por otro lado, esta la opci'on de asegurar que los datos sean consistentes con el estado del sistema de archivos, lo que significa que nunca habr'a "datos basura" de un archivo escrito poco antes de una caída del sistema luego de esta.
-Esta ultima opción es la utilizada por defecto.
-						\\EL ext3 escribe tres tipos de bloques de datos en el registro:
+Las mejoras introducidas proporcionan las siguientes ventajas:
+\paragraph{Disponibilidad}
+En ext2 al volver luego de una caida inesperada del sistema se debe comprobar el sistema de archivos para verificar su consistencia. Este proceso de comprobaci'on puede llevar mucho tiempo pudiendo prolongar el tiempo de arranque de un modo significativo, incluso por varios minutos si hay muchos archivos, ya que durante este proceso no se tiene acceso a los datos del disco.
 
-						\begin{asparaenum}
-							\item Meta-información: Contiene el bloque de meta-información que está siendo actualizado por la transacción. Cada cambio en el sistema de archivos es escrito en el registro. Sin embargo esto es relativamente barato ya que varias operaciones de E/S pueden ser agrupadas en conjuntos y ser escritas directamente desde el sistema page-cache.
-							\item Bloques descriptores: Estos bloques son los que describen a otros bloques del registro para luego poder ser copiados al sistema principal. Los cambios en estos bloques se escriben antes de los de meta-información.
-							\item Bloques cabeceras: Describen la cabecera y cola del registro más un número de secuencia para garantizar el orden de escritura durante la recuperación del sistema de archivos.
-							\end{asparaenum}
-							
-							Con ext3 se mantiene la consistencia tanto en la meta-información (i-nodos o metadatos) como en los datos de los ficheros (datos). A diferencia de los demás sistemas de journaling, la consistencia de los datos también está asegurada.
+En ext3, en cambio, debido a la caracter'istica de journaling, deja de ser necesario este tipo de comprobaci'on en el sistema de archivos despu'es de cada caida inesperada del sistema. Esto se debe a que los datos son escritos en el disco de manera tal que el sistema de archivos siempre este consistente. 'Unicamente se necesita realizar una comprobaci'on de consistencia luego de determinados errores de hardware, como ser, fallos en el disco duro, que se dan raramente.
+El tiempo de recuperaci'on de un sistema de archivos ext3 tras una ca'ida del sistema no depende del tamano del sistema de archivos ni del n'umero de archivos, sino del tamanno del "diario o journal" (journal) empleado para mantener la consistencia en el sistema. Por lo general, dado el tamannno asignado para el journal, la recuperaci'on tarda alrededor de un segundo (aunque depende de la velocidad del hardware).
+\paragraph{Integridad de los datos}
+Ext3 proporciona una mayor garant'ia de integridad de los datos al producirse un cierre incorrecto del sistema. Permitiendo seleccionar tipo y nivel de la protecci'on de los datos. Se puede seleccionar mantener la consistencia de los datos
+pero permitiendo da~nos en los datos dentro del sistema de archivos en el caso de apagado incorrecto, lo que puede permitir un peque~no aumento de la velocidad bajo algunas circunstancias. Por defecto, este nivel sueler ser elevado en relaci'on con el estado del sistema de archivos. Por otro lado, esta la opci'on de asegurar que los datos sean consistentes con el estado del sistema de archivos, lo que significa que nunca habr'a "datos basura" de un archivo escrito poco antes de una ca'ida del sistema luego de esta.
+Esta ultima opci'on es la utilizada por defecto.
+
+EL ext3 escribe tres tipos de bloques de datos en el registro:
+\begin{asparaenum}
+	\item Meta-informaci'on: Contiene el bloque de meta-informaci'on que est'a siendo actualizado por la transacci'on. Cada cambio en el sistema de archivos es escrito en el registro. Sin embargo esto es relativamente barato ya que varias operaciones de E/S pueden ser agrupadas en conjuntos y ser escritas directamente desde el sistema page-cache.
+	\item Bloques descriptores: Estos bloques son los que describen a otros bloques del registro para luego poder ser copiados al sistema principal. Los cambios en estos bloques se escriben antes de los de meta-informaci'on.
+	\item Bloques cabeceras: Describen la cabecera y cola del registro m'as un n'umero de secuencia para garantizar el orden de escritura durante la recuperaci'on del sistema de archivos.
+\end{asparaenum}
+Con ext3 se mantiene la consistencia tanto en la meta-informaci'on (i-nodos o metadatos) como en los datos de los ficheros (datos). A diferencia de los dem'as sistemas de journaling, la consistencia de los datos tambi'en est'a asegurada.
 						
-					\item Velocidad
-						\\
-						\\EXT3, a pesar de permitir escribir datos m'as de una vez, en la mayor parte de los casos su rendimiento es superior al de ext2 porque los "diarios o journals" de ext3 optimizan el movimiento de las cabezas de los discos duros.
-						\\EXT3 permite, seleccionarse 3 modos de journaling para optimizar la velocidad pero seg'un la elecci'on la integridad de los datos ser'a afectada.
-						
-						Los diferentes modos son:
+\paragraph{Velocidad}
+EXT3, a pesar de permitir escribir datos m'as de una vez, en la mayor parte de los casos su rendimiento es superior al de ext2 porque los "diarios o journals" de ext3 optimizan el movimiento de las cabezas de los discos duros.
 
-							\begin{itemize}
-							\item data=writeback: limita la garantía de integridad de los datos, permitiendo a los antiguos datos aparecer en ficheros después de una caída, para un posible pequeño incremento de la velocidad en algunas circunstancias. Este es el modo journaling por defecto en muchos otros sistemas de archivos de journaling. Proporciona las garantías más limitadas de integridad de datos y evita el chequeo en el reinicio del sistema.
-
-							\item data=ordered (modo por defecto): garantiza que los datos son consistentes con el sistema de archivos. Los archivos escritos recientemente nunca aparecerán con contenidos basura después de una caída.
-
-							\item data=journal: requiere un "journal" grande para una velocidad razonable en la mayoría de los casos y por lo tanto tarda más tiempo recuperando el sistema en el caso de un apagadp incorrecto, pero en algunos casos es más rápido para algunas operaciones ya que funciona muy bien si se escriben muchos datos al mismo tiempo (por ejemplo en los spools de correo o servidores NFS sincronizados). As'i mismo, utilizar este modo para un uso normal resulta frecuentemente un poco más lento.
-							\end{itemize}
+EXT3 permite, seleccionarse 3 modos de journaling para optimizar la velocidad pero seg'un la elecci'on la integridad de los datos ser'a afectada.
 						
-					\item F'acil migraci'on
-						\\
-						\\Las particiones ext3 tienen la misma estructura de archivos a la de ext2, lo que permite no s'olo pasar de ext2 a ext3, sino que lo opuesto tambi'en funciona, lo que es 'util sobre todo si en alg'un caso el registro se corrompe accidentalmente, por ejemplo debido a sectores defectuosos del disco.
-						\\As'i mismo s'olo se puede pasar de ext3 a ext2 cuando la partici'on ext3 ha sido anteriormente desmontada correctamente, sino se puede perder la informaci'on de journal necesaria para recuperar el sistema de un apagado incorrecto.
-						
-					\end{itemize}
+Los diferentes modos son:
+\begin{itemize}
+	\item data=writeback: limita la garant'ia de integridad de los datos, permitiendo a los antiguos datos aparecer en ficheros despu'es de una ca'ida, para un posible peque~no incremento de la velocidad en algunas circunstancias. Este es el modo journaling por defecto en muchos otros sistemas de archivos de journaling. Proporciona las garant'ias m'as limitadas de integridad de datos y evita el chequeo en el reinicio del sistema.
+	\item data=ordered (modo por defecto): garantiza que los datos son consistentes con el sistema de archivos. Los archivos escritos recientemente nunca aparecer'an con contenidos basura despu'es de una ca'ida.
+	\item data=journal: requiere un "journal" grande para una velocidad razonable en la mayor'ia de los casos y por lo tanto tarda m'as tiempo recuperando el sistema en el caso de un apagadp incorrecto, pero en algunos casos es m'as r'apido para algunas operaciones ya que funciona muy bien si se escriben muchos datos al mismo tiempo (por ejemplo en los spools de correo o servidores NFS sincronizados). As'i mismo, utilizar este modo para un uso normal resulta frecuentemente un poco m'as lento.
+\end{itemize}
 					
-				Como desventaja podemos citar qque su velocidad y escalabilidad son menores que las de sus competidores (por ejemplo: JFS, ReiserFS o XFS). Sin embargo, repetimos, tiene la ventaja de permitir actualizar de ext2 a ext3 sin perder los datos almacenados ni formatear el disco, y un menor consumo de CPU.
-				
-				
-		\subsubsection{Manejo Dispositivos de Bloque en Linux}
+\paragraph{F'acil migraci'on}
+Las particiones ext3 tienen la misma estructura de archivos a la de ext2, lo que permite no s'olo pasar de ext2 a ext3, sino que lo opuesto tambi'en funciona, lo que es 'util sobre todo si en alg'un caso el registro se corrompe accidentalmente, por ejemplo debido a sectores defectuosos del disco.
 
-			\\Todo los dispositivos instalados en una máquina se pueden acceder a través de la interfaz de ficheros bajo el directorio /dev/ . Allí podemos encontrar los dispositivos conectados a las controladoras IDE (hda, hdb, hdc y hdd), el dsp de la tarjeta de sonido, etc.
-			\\
-			\\Los archivos asociados a un dispositivo pueden ser de dos tipos, de caracter y de bloque. Si ejecutamos un ls -l /dev, la primera columna nos indica el tipo de dispositivo, ``c'' para dispositivos de caracter y ``b'' para dispositivos de bloque.
-			\\
-			\\Los dispositivos de caracter son accedidos secuencialmente, un caracter cada vez. Algunos ejemplos de dispositivos de caracter son el ratón, el teclado, un terminal de texto, una cinta magnética, null, etc.
-			\\
-			\\Los dispositivos de bloque se caracterizan por ser de acceso aleatorio, la unidad mínima de lectura-escritura no es un caracter, sino un bloque (normalmente 1KB). Algunos ejemplos de dispositivos de caracter son los discos duros, los disquetes, los CDROMS, etc. 
-			\\Esto permite al kernel realizar una serie de optimizaciones sobre los accesos a dispositivos de bloque que para el caso de los de caracter no tienen sentido. El kernel se encarga de acumular las llamadas de escritura o lectura, metiéndolas en buffers y ordenándolas, de forma que se mejora de forma notable la velocidad de trabajo con el dispositivo.
-			\\
-			\\Es por esto que en un driver de bloques, las funciones de lectura y escritura no las implementa el programador de drivers, ya están incluidas en el kernel. Básicamente cuando llega al driver una petición de lectura-escritura, este hace referencia (a través de $f\_ops$) a unas funciones genéricas del kernel para el manejo de llamadas a dispositivos de bloques. El kernel ordena las llamadas, las optimiza y finalmente las almacena en una cola de peticiones .
-			\\
-			\\Esta cola de peticiones es la que tenemos que ir atendiendo desde nuestro driver, cada elemento de la cola es del tipo request , y representa una petición de lectura o escritura para nuestro dispositivo.
-			\\
-			\\Tenemos pues que las $file\_operations$ de read y write de nuestro driver, han de estar apuntando a las funciones por defecto del kernel de lectura y escritura de drivers de bloque. Estas a su vez transforman llamadas al sistema de lectura-escritura de datos en peticiones de lectura-escritura de bloques, que se almacenan en una cola de peticiones.
+As'i mismo s'olo se puede pasar de ext3 a ext2 cuando la partici'on ext3 ha sido anteriormente desmontada correctamente, sino se puede perder la informaci'on de journal necesaria para recuperar el sistema de un apagado incorrecto.
+					
+Como desventaja podemos citar qque su velocidad y escalabilidad son menores que las de sus competidores (por ejemplo: JFS, ReiserFS o XFS). Sin embargo, repetimos, tiene la ventaja de permitir actualizar de ext2 a ext3 sin perder los datos almacenados ni formatear el disco, y un menor consumo de CPU.
+				
+\subsubsection{Manejo Dispositivos de Bloque en Linux}
+Todo los dispositivos instalados en una m'aquina se pueden acceder a trav'es de la interfaz de ficheros bajo el directorio /dev/ . All'i podemos encontrar los dispositivos conectados a las controladoras IDE (hda, hdb, hdc y hdd), el dsp de la tarjeta de sonido, etc.
+
+Los archivos asociados a un dispositivo pueden ser de dos tipos, de caracter y de bloque. Si ejecutamos un ls -l /dev, la primera columna nos indica el tipo de dispositivo, "c" para dispositivos de caracter y "b" para dispositivos de bloque.
+
+Los dispositivos de caracter son accedidos secuencialmente, un caracter cada vez. Algunos ejemplos de dispositivos de caracter son el rat'on, el teclado, un terminal de texto, una cinta magn'etica, null, etc.
+
+Los dispositivos de bloque se caracterizan por ser de acceso aleatorio, la unidad m'inima de lectura-escritura no es un caracter, sino un bloque (normalmente 1KB). Algunos ejemplos de dispositivos de caracter son los discos duros, los disquetes, los CDROMS, etc. 
+
+Esto permite al kernel realizar una serie de optimizaciones sobre los accesos a dispositivos de bloque que para el caso de los de caracter no tienen sentido. El kernel se encarga de acumular las llamadas de escritura o lectura, meti'endolas en buffers y orden'andolas, de forma que se mejora de forma notable la velocidad de trabajo con el dispositivo.
+
+Es por esto que en un driver de bloques, las funciones de lectura y escritura no las implementa el programador de drivers, ya est'an incluidas en el kernel. B'asicamente cuando llega al driver una petici'on de lectura-escritura, este hace referencia (a trav'es de f\_ops) a unas funciones gen'ericas del kernel para el manejo de llamadas a dispositivos de bloques. El kernel ordena las llamadas, las optimiza y finalmente las almacena en una cola de peticiones .
+
+Esta cola de peticiones es la que tenemos que ir atendiendo desde nuestro driver, cada elemento de la cola es del tipo request , y representa una petici'on de lectura o escritura para nuestro dispositivo.
+
+Tenemos pues que las file\_operations de read y write de nuestro driver, han de estar apuntando a las funciones por defecto del kernel de lectura y escritura de drivers de bloque. Estas a su vez transforman llamadas al sistema de lectura-escritura de datos en peticiones de lectura-escritura de bloques, que se almacenan en una cola de peticiones.
 			
