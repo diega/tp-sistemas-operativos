@@ -1,0 +1,86 @@
+\section{Ejecuci'on de procesos en Background}
+\subsection{Enunciado}
+\subsubsection{Threads}
+
+Para este ejercicio realizamos 4 m'etodos. El productor (produce), el que llena el buffer con lo producido (producer), un consumidor (consume) y el que consume los datos del buffer (consumer).
+\\
+\\ Pasemos a ver cada uno:
+\\
+\\ \textbf{producer:}
+\\
+\\Producer recibe el buffer donde pondr'a los datos producidos por el productor (produce).
+\\ Para esto usa un ciclo en el cual va leyendo los datos del archivo del cual lee y luego llama a produce para que los valla poniendo en el buffer. Cuando llega al final del archivo termina.
+\\
+\\ \textbf{produce:}
+\\
+\\Produce recibe el buffer y el caracter a escribir en el buffer. Con esos datos pasa a ver si puede escribir en el buffer haciendo un P(buffer.lock) (para esto usa el pthread$\_mutex\_lock$) y si no puede escribir se lockea.
+\\ Si puede producir lo indica imprimiendo "Produce" y pasa a intentar llenarlo. Para eso entra a un ciclo en el que se va fijando si el buffer esta lleno (b.occupied == BSIZE), si lo est'a espera hasta ser despertado (para esto usa el $pthread\_cond\_wait$).
+\\ Una vez ya puede escribir el caracter en el buffer lo hace. Para esto primero lo escribe y adelanta la posici'on del buffer a escribir (nextin) fij'andose que no sobrepase la longitud del mismo, y si lo hace, entonces le toma el m'odulo a la longitud (BSIZE). Y finalmente le suma uno m'as a la cantidad de posiciones ocupadas (occupied) para luego saber cuando esta totalmente lleno.
+\\ Por 'ultimo hace un signal para despertar a los consumidores que estuvieran dormidos por no haber encontrado datos en el buffer (usa para esto $pthread\_cond\_signal$ sobre el more del buffer) y luego deslockea nuevamente el buffer con un V(buffer.lock) (usando $pthread\_mutex\_unlock$).
+\\nextin va movi'endose circularmente sobre el buffer dado que la pol'itica de producci'on y consumi'on es FIFO. Y por eso es necesaria la variable occupied para saber si el buffer est'a lleno o no.
+\\
+\\ \textbf{consumer:}
+\\
+\\Consumer crea una variable para almacenar el caracter a leer del buffer, indica que va a consumir caracteres para el proceso del que obtiene el id (con getpid).
+\\Y pasa a pedir, dentro de un ciclo, a consume que consuma del buffer que le pasa. Consume le va devolviendo caracter a caracter lo consumido y mientras este no sea el final sigue leyendo.
+\\
+\\\textbf{consume:}
+\\
+\\Consume recibe el buffer y devuelve el caracter que se consumi'o del buffer. Ya teniendo el buffer trata de cerrarlo haciendo un P() del sem'aforo del buffer (con $pthread\_mutex\_lock$) , si no estaba lockeado de antes, etonces podr'a consumir. Sino tendr'a que esperar.
+\\El paso siguiente es ver si hay datos para consumir en el buffer para lo que usa un ciclo en que se fija si es el buffer esta vac'io (b.occupied == 0) y si lo est'a se quedara en espera de que alg'un productor lo llene. Esto lo hace usando el $pthread\_mutex\_lock$.
+\\ Por el contrario, si puede consumir lo indica imprimiendo "Consume" y pasa a consumirlo. Para esto primero lo lee de la posici'on nextout, la cual luego la apunta a la siguiente posici'on a consumir.
+\\A continuaci'on decrementa la cantidad de posiciones ocupadas del buffer (decrementando occupied) y se fija que no pase a valer menos de cero, lo cual lo comprueba haciendo el m'odulo de la misma con la longitud del mismo(BSIZE). Con esto 'ultimo sabr'a cuando el buffer est'e vac'io.
+\\ Por 'ultimo hace un signal para despertar a los productores que estuvieran dormidos por no haber podido producir por haber estado lleno el buffer (usa para esto $pthread\_cond\_signal$ sobre el less del buffer) y luego deslockea nuevamente el buffer con un V(buffer.lock) (usando $pthread\_mutex\_unlock$).
+\\nextou va movi'endose circularmente sobre el buffer dado que la pol'itica de producci'on y consumi'on es FIFO. Y por eso es necesaria la variable occupied para saber si el buffer est'a lvac'io o no.
+\\
+\\\textbf{Inicializaciones necesarias:}
+\\
+\\Para que funcione correctamente los algoritmos es necesario incluir los paquetes pthread.h y stdio.h. Definir a la longitud del buffer como variable global y crear la estructura del tipo $buffer\_t$ que vamos a usar como buffer.
+\\
+\\typedef struct $buffer\_t$ \{
+\\\indent    char buf[BSIZE];
+\\\indent    $pthread\_mutex\_t$ lock;
+\\\indent    $pthread\_cond\_t$ less;
+\\\indent    $pthread\_cond\_t$ more;
+\\\indent    int nextin;
+\\\indent	 int nextout;
+\\\indent	 int occupied;
+\\\} $buffer\_t$;
+\\
+\\\textbf{Y en el main inicializamos lo datos necesarios:}
+
+\begin{verbatim}
+
+	buffer_t buffer;
+	pthread_mutexattr_t mutex_attr;
+	pthread_condattr_t cond_attr;
+	buffer.occupied = buffer.nextin = buffer.nextout = 0;
+	
+	pthread_mutexattr_init(&mutex_attr);
+	pthread_mutexattr_setpshared(&mutex_attr, PTHREAD_PROCESS_SHARED);
+	pthread_mutex_init(&buffer.lock, &mutex_attr);
+	
+	pthread_condattr_init(&cond_attr);
+	pthread_condattr_setpshared(&cond_attr, PTHREAD_PROCESS_SHARED);
+	pthread_cond_init(&buffer.less, &cond_attr);
+	pthread_cond_init(&buffer.more, &cond_attr);
+\end{verbatim}
+
+Y llamamos a los procesos dividiendo ambas opciones con un fork.
+\\
+\begin{verbatim}
+	if (fork() == 0) {
+		consumer(buffer);
+		return 0;
+	}
+	else {
+		producer(buffer);
+		return 0;
+	}
+\end{verbatim}
+
+Para compilar, guardamos el código como threads.c y lo compilamos por linea de comando con lo siguiente:
+\\gcc -static threads.c -o threads -L -ISDL -lm -lpthread
+\\
+
+%\~n
