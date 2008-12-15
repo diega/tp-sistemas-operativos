@@ -155,23 +155,20 @@ Esta ultima opción es la utilizada por defecto.
 				Como desventaja podemos citar qque su velocidad y escalabilidad son menores que las de sus competidores (por ejemplo: JFS, ReiserFS o XFS). Sin embargo, repetimos, tiene la ventaja de permitir actualizar de ext2 a ext3 sin perder los datos almacenados ni formatear el disco, y un menor consumo de CPU.
 				
 				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
+		\subsubsection{Manejo Dispositivos de Bloque en Linux}
+
+			\\Todo los dispositivos instalados en una máquina se pueden acceder a través de la interfaz de ficheros bajo el directorio /dev/ . Allí podemos encontrar los dispositivos conectados a las controladoras IDE (hda, hdb, hdc y hdd), el dsp de la tarjeta de sonido, etc.
+			\\
+			\\Los archivos asociados a un dispositivo pueden ser de dos tipos, de caracter y de bloque. Si ejecutamos un ls -l /dev, la primera columna nos indica el tipo de dispositivo, ``c'' para dispositivos de caracter y ``b'' para dispositivos de bloque.
+			\\
+			\\Los dispositivos de caracter son accedidos secuencialmente, un caracter cada vez. Algunos ejemplos de dispositivos de caracter son el ratón, el teclado, un terminal de texto, una cinta magnética, null, etc.
+			\\
+			\\Los dispositivos de bloque se caracterizan por ser de acceso aleatorio, la unidad mínima de lectura-escritura no es un caracter, sino un bloque (normalmente 1KB). Algunos ejemplos de dispositivos de caracter son los discos duros, los disquetes, los CDROMS, etc. 
+			\\Esto permite al kernel realizar una serie de optimizaciones sobre los accesos a dispositivos de bloque que para el caso de los de caracter no tienen sentido. El kernel se encarga de acumular las llamadas de escritura o lectura, metiéndolas en buffers y ordenándolas, de forma que se mejora de forma notable la velocidad de trabajo con el dispositivo.
+			\\
+			\\Es por esto que en un driver de bloques, las funciones de lectura y escritura no las implementa el programador de drivers, ya están incluidas en el kernel. Básicamente cuando llega al driver una petición de lectura-escritura, este hace referencia (a través de $f\_ops$) a unas funciones genéricas del kernel para el manejo de llamadas a dispositivos de bloques. El kernel ordena las llamadas, las optimiza y finalmente las almacena en una cola de peticiones .
+			\\
+			\\Esta cola de peticiones es la que tenemos que ir atendiendo desde nuestro driver, cada elemento de la cola es del tipo request , y representa una petición de lectura o escritura para nuestro dispositivo.
+			\\
+			\\Tenemos pues que las $file\_operations$ de read y write de nuestro driver, han de estar apuntando a las funciones por defecto del kernel de lectura y escritura de drivers de bloque. Estas a su vez transforman llamadas al sistema de lectura-escritura de datos en peticiones de lectura-escritura de bloques, que se almacenan en una cola de peticiones.
+			
