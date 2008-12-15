@@ -39,7 +39,7 @@ void consumer(buffer_t b){
 
 char produce(buffer_t b, char item){
 	pthread_mutex_lock(&b.lock);
-	printf("Consume\n");
+	printf("Produce\n");
 	while (b.occupied == BSIZE)
 		pthread_cond_wait(&b.less, &b.lock);
 	b.buf[b.nextin++] = item;
@@ -51,6 +51,7 @@ char produce(buffer_t b, char item){
 
 void producer(buffer_t b) {
 	int item;
+	printf("Productor\n");
 	while (1) {
 		item = getchar();
 		if (item == EOF) {
