@@ -13,6 +13,8 @@ typedef struct buffer_t {
 	int occupied;
 } buffer_t;
 
+buffer_t buffer;
+
 char consume(buffer_t b){
 	char item;
 	pthread_mutex_lock(&b.lock);
@@ -63,9 +65,16 @@ void producer(buffer_t b) {
 	}
 }
 
-int main(){
+void prodprod (void *ptr){
+    producer(buffer);
+}
 
-	buffer_t buffer;
+void conscons (void *ptr){
+    consumer(buffer);
+}
+
+int main(){
+	
 	pthread_mutexattr_t mutex_attr;
 	pthread_condattr_t cond_attr;
 	buffer.occupied = buffer.nextin = buffer.nextout = 0;
@@ -79,16 +88,17 @@ int main(){
 	pthread_cond_init(&buffer.less, &cond_attr);
 	pthread_cond_init(&buffer.more, &cond_attr);
 	
-	if (fork() == 0) {
-		consumer(buffer);
-		return 0;
-	}
-	else {
-		producer(buffer);
-		return 0;
-	}
-
-    return 0;
+	
+	pthread_t cons, prod;
+	int idCons = 0, idProd = 1;
+	
+	pthread_create(&cons, NULL, (void *) conscons, (void *) &idCons);
+	pthread_create(&prod, NULL, (void *) prodprod, (void *) &idProd);
+	
+	pthread_join(cons, NULL);
+	pthread_join(prod, NULL);
+	
+	return 0;
 }
 
 
