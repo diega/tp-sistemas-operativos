@@ -1,6 +1,6 @@
 \section{Ejecuci'on de procesos en Background}
 \subsection{Enunciado}
-Cree el archivo /home/<usuario>/tp/loop.c. Comp'ilelo con \verb@gcc@. El programa compilado debe llamarse \verb@loop@. 
+Cree el archivo /home/diego/tp/loop.c. Comp'ilelo con \texttt{gcc}. El programa compilado debe llamarse \texttt{loop}. 
 \begin{verbatim}
   #include <stdio.h>
   #define IDGRUPO 10;
@@ -16,18 +16,23 @@ Cree el archivo /home/<usuario>/tp/loop.c. Comp'ilelo con \verb@gcc@. El program
   }
 \end{verbatim}
 \begin{enumerate}
-\item Correrlo en foreground. ?`Qu'e suscede? Mate el proceso con \verb@Ctrl-c@
-\item Ahora ejec'utelo en backgroun \verb|/usr/src/loop > /dev/null &|. Mate el proceso con el comando \verb@kill@
+\item Correrlo en foreground. ?`Qu'e suscede? Mate el proceso con \texttt{Ctrl-c}
+\item Ahora ejec'utelo en backgroun \texttt{/usr/src/loop $>$ /dev/null \&}. Mate el proceso con el comando \texttt{kill}
 \end{enumerate}
 \subsection{Desarrollo}
-Usando el editor \verb@vi@ se cre'o el programa \verb@loop.c@ que se encuentra en la carpeta \verb@/home/grupo6/loop.c@.
-Se compil'o el programa asign'andole a la macro \verb@IDGRUPO@ el valor 6. El comando ejecutado fue: \verb@$gcc loop.c -o loop@\\
-\begin{asparaenum}
-\item Al ejecutar el programa \verb@loop@ en foreground se pierde el control de esta terminal, ya que \verb@loop@ es un ciclo infinito. Cada vez que se ejecuta un comando en foreground, la consola queda esperando la finalizaci'on del mismo, siendo imposible realizar otra operaci'on en la misma consola.\\
-Para recuperar el control de la terminal utilizamos la combinaci'on \verb@Ctrl-c@\\
+Usando el editor \texttt{vi} se cre'o el programa \texttt{loop.c} que se encuentra en la carpeta \texttt{/home/diego/tp/src/c/loop.c}.
+Se compil'o el programa asign'andole a la macro \texttt{IDGRUPO} el valor 10. El comando ejecutado fue: \texttt{gcc loop.c -o loop}
 
-\item Al ejecutar el programa con la sentencia \verb@$ ./loop > /dev/null &@ la salida standard del mismo es redireccionada a \verb@dev/null@. En definitiva se descarta la salida standard.\\
-Con el \verb@&@ estamos indicando que el proceso debe ejecutarse en background. Al ejecutarse en background la consola queda libre para ejecutar cualquier comando a diferencia de la ejecuci'on en foreground, o sea, no espera a que el comando termine su ejecuci'on.\\
-La ejecuci'on del programa con esta sentencia nos arroja como resultado inmediato el PID del proceso.\\
-Utilizando el comando \verb@kill@ m'as el PID antes obtenido podemos matar el proceso.
+\begin{asparaenum}
+
+\item Al ejecutar el programa \texttt{loop} en foreground se pierde el control de esta terminal, ya que \texttt{loop} es un ciclo infinito. Cada vez que se ejecuta un comando en foreground, la consola queda esperando la finalizaci'on del mismo, siendo imposible realizar otra operaci'on en la misma consola.
+Para recuperar el control de la terminal utilizamos la combinaci'on \texttt{Ctrl-c}
+
+\item Al ejecutar el programa con la sentencia \texttt{./loop $>$ /dev/null \&} la salida standard del mismo es redireccionada a \texttt{dev/null}. En definitiva se descarta la salida standard.
+
+Con el \texttt{\&} estamos indicando que el proceso debe ejecutarse en background. Al ejecutarse en background la consola queda libre para ejecutar cualquier comando a diferencia de la ejecuci'on en foreground, o sea, no espera a que el comando termine su ejecuci'on.
+
+La ejecuci'on del programa con esta sentencia nos arroja como resultado inmediato el PID del proceso.
+
+Utilizando el comando \texttt{kill} m'as el PID antes obtenido podemos matar el proceso.
 \end{asparaenum}
