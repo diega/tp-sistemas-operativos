@@ -7,8 +7,8 @@
 {\end{list}}
 
 \section{Comandos B'asicos de UNIX}
-		\subsection{\ttfamily{pwd}}
-      Muestra el nombre del directorio actual. Ejemplo:\\
+\subsection{\ttfamily{pwd}}
+Muestra el nombre del directorio actual. Ejemplo:\\
       \begin{mylisting}
       \begin{verbatim}        
         $ cd /usr/bin/
@@ -19,12 +19,12 @@
         /home/grupoXX
       \end{verbatim}
       \end{mylisting}
-		Esto ocurre porque el comando \verb@cd@ invocado sin par'ametros establece como directorio actual el indicado por la variable de entorno \verb@$HOME@.
+Esto ocurre porque el comando \texttt{cd} invocado sin par'ametros establece como directorio actual el indicado por la variable de entorno \texttt{\$HOME}.
 
-		\subsection{\ttfamily{cat}}
-      Concatena archivos y escribe el resultado en la salida estandar \mbox{(stdout)}. La salida obtenida es:\\
-      \begin{mylisting}			
-			\begin{verbatim}
+\subsection{\ttfamily{cat}}
+Concatena archivos y escribe el resultado en la salida estandar \mbox{(stdout)}. La salida obtenida es:\\
+      \begin{mylisting}
+      \begin{verbatim}
         $ cat /home/grupoXX/.profile
         # ~/.profile: executed by the command interpreter for login shells.
         # This file is not read by bash(1), if ~/.bash_profile or 
@@ -49,236 +49,227 @@
         fi
       \end{verbatim}
       \end{mylisting}
-			El archivo \verb@/home/grupoXX/.profile@ se utiliza para personalizar el entorno de ejecuci'on. Usualmente aqu'i se define la variable de entorno \verb@PATH@, una variable cuyo valor indica los directorios d'onde Linux buscar'a cuando se ejecute un comando sin explicitar la ruta de acceso a 'el.
-			
-			Tambi'en ejecuta el archivo \verb@.bashrc@ para cargar las configuraciones propias del int'erprete de comandos \verb@.bash@.
+El archivo \texttt{/home/grupoXX/.profile} se utiliza para personalizar el entorno de ejecuci'on. Usualmente aqu'i se define la variable de entorno \texttt{PATH}, una variable cuyo valor indica los directorios d'onde Linux buscar'a cuando se ejecute un comando sin explicitar la ruta de acceso a 'el.
 
-		\subsection{\ttfamily{find}}
-		  Busca archivos en la estructura de directorios.
-			\\\\\indent Para obtener el path de los archivos que comienzan con \verb@vmlinuz@, podemos invocar el comando \verb@find@ de la siguiente manera:\\
+Tambi'en ejecuta el archivo \texttt{.bashrc} para cargar las configuraciones propias del int'erprete de comandos \texttt{.bash}.
 
+\subsection{\ttfamily{find}}
+Busca archivos en la estructura de directorios.
+
+Para obtener el path de los archivos que comienzan con \texttt{vmlinuz}, podemos invocar el comando \texttt{find} de la siguiente manera:
       \begin{mylisting}
-      \begin{verbatim} 
-			sudo find / -name 'vmlinuz*' -print
+      \begin{verbatim}
+	sudo find / -name 'vmlinuz*' -print
+      \end{verbatim}
+      \end{mylisting}
+De esta forma, se indica que busque los archivos recursivamente desde el directorio \texttt{/}, que adem'as se desea buscar los archivos cuyo nombre comiencen \texttt{vmlinuz}, y que los resultados se deben mostrar por la salida est'andar (si no se escribe \texttt{-print}, igualmente se muestra el resultado por salida est'andar).
+La salida obtenida es:
+      \begin{mylisting}
+      \begin{verbatim}
+	/vmlinuz
+	/boot/vmlinuz-2.6.28-11-virtual
       \end{verbatim}
       \end{mylisting}
 
-			De esta forma, se indica que busque los archivos recursivamente desde el directorio \verb@/@, que adem'as se desea buscar los archivos cuyo nombre comiencen \verb@vmlinuz@, y que los resultados se deben mostrar por la salida est'andar (si no se escribe \verb@-print@, igualmente se muestra el resultado por salida est'andar).
-			\\\\
-			La salida obtenida es:\\
+\subsection{\ttfamily{mkdir}}
+Para crear un directorio en el directorio \texttt{/home/grupoXX} el comando se debe invocar de la siguiente manera:
 
+\texttt{mkdir /home/grupoXX/tp}
+
+\subsection{\ttfamily{cp}}
+Para copiar el archivo \texttt{/etc/passwd} al directorio \texttt{/home/grupoXX/tp}, se debe escribir la siguiente instrucci'on:
+
+\texttt{cp /etc/passwd /home/grupoXX/tp}
+
+\subsection{\ttfamily{chgrp}}
+Para cambiar el grupo al que pertenece el archivo \texttt{/home/grupoXX/tp/passwd} y establecerlo en \emph{grupoXX} se debe ejecutar:
+
+\texttt{chgrp grupoXX /home/grupoXX/tp/passwd}
+
+\subsection{\ttfamily{chown}}
+Para cambiar el propietario al que pertenece el archivo \texttt{/home/grupoXX/tp/passwd} y establecerlo en \emph{grupoXX} se debe ejecutar:
+
+\texttt{chown grupoXX /home/grupoXX/tp/passwd}
+
+\subsection{\ttfamily{chmod}}
+Para que el propietario tenga permisos de lectura, escritura y ejecuci'on sobre el archivo \texttt{/home/grupoXX/tp/passwd} se debe invocar:
+
+\texttt{chmod u+rwx /home/grupoXX/tp/passwd}
+
+Para que el grupo tenga solo permisos de lectura y ejecuci'on sobre el archivo \texttt{/home/grupoXX/tp/passwd}:
+
+\texttt{chmod g+rx-w /home/grupoXX/tp/passwd}
+
+Es decir, se debe sacar el permiso de escritura.
+Para que el resto (los que no son ni el propietario ni miembros del grupo) tengan solo permisos de ejecuci'on sobre el archivo \texttt{/home/grupoXX/tp/passwd} se debe invocar:
+
+\texttt{chmod o-r-w+x /home/grupoXX/tp/passwd}
+
+\subsection{\ttfamily{grep}}
+Para visualizar las lineas que tienen el texto localhost en el archivo /etc/hosts se ejecuta el comando
+
+\texttt{grep localhost /etc/hosts}
+
+La salida obtenida es:
       \begin{mylisting}
-      \begin{verbatim} 
-			/vmlinuz
-			/boot/vmlinuz-2.6.24-19-virtual
+      \begin{verbatim}
+	127.0.0.1     localhost
+	::1           ip6-localhost ip6-loopback
       \end{verbatim}
       \end{mylisting}
-
-		\subsection{\ttfamily{mkdir}}
-			Para crear un directorio en el directorio \verb@/home/grupoXX@ el comando se debe invocar de la siguiente manera:
-
-			\verb@mkdir /home/grupoXX/tp@
-
-		\subsection{\ttfamily{cp}}
-		
-			Para copiar el archivo \verb@/etc/passwd@ al directorio \verb@/home/grupoXX/tp@, se debe escribir la siguiente instrucci'on:
-
-			\verb@cp /etc/passwd /home/grupoXX/tp@
-		
-		\subsection{\ttfamily{chgrp}}
-
-			Para cambiar el grupo al que pertenece el archivo \verb@/home/grupoXX/tp/passwd@ y establecerlo en \emph{grupoXX} se debe ejecutar:
-
-			\verb@chgrp grupoXX /home/grupoXX/tp/passwd@
-
-		\subsection{\ttfamily{chown}}
-
-			Para cambiar el propietario al que pertenece el archivo \verb@/home/grupoXX/tp/passwd@ y establecerlo en \emph{grupoXX} se debe ejecutar:
-
-			\verb@chown grupoXX /home/grupoXX/tp/passwd@
-
-		\subsection{\ttfamily{chmod}}
-
-			Para que el propietario tenga permisos de lectura, escritura y ejecuci'on sobre el archivo \verb@/home/grupoXX/tp/passwd@ se debe invocar:
-
-			\verb@chmod u+rwx /home/grupoXX/tp/passwd@
-		
-			Para que el grupo tenga solo permisos de lectura y ejecuci'on sobre el archivo \verb@/home/grupoXX/tp/passwd@:
-
-			\verb@chmod g+rx-w /home/grupoXX/tp/passwd@
-
-			Es decir, se debe sacar el permiso de escritura.
-		
-			Para que el resto (los que no son ni el propietario ni miembros del grupo) tengan solo permisos de ejecuci'on sobre el archivo \verb@/home/grupoXX/tp/passwd@ se debe invocar:
-
-			\verb@chmod o-r-w+x /home/grupoXX/tp/passwd@
-
-		\subsection{\ttfamily{grep}}
-			Para visualizar las lineas que tienen el texto localhost en el archivo /etc/hosts se ejecuta el comando
-
-			\verb@grep localhost /etc/hosts@
-
-			La salida obtenida es:
-      \begin{mylisting}
-			\begin{verbatim}
-        127.0.0.1     localhost
-        ::1           ip6-localhost ip6-loopback
-			\end{verbatim}
-      \end{mylisting}
-			
-			Para mostrar las lineas que tiene el texto POSIX que se encuentren en todos los archivos dentro de \verb|/etc/|, excluyendo los binarios y los que no pertenecen al usuario, se debe ejecutar el comando \verb@grep -r -I -s POSIX /etc/*@.
+Para mostrar las lineas que tiene el texto POSIX que se encuentren en todos los archivos dentro de \texttt{/etc/}, excluyendo los binarios y los que no pertenecen al usuario, se debe ejecutar el comando \texttt{grep -r -I -s POSIX /etc/*}.
 Para que que s'olo muestre el nombre y la ruta de los archivos que contienen el texto POSIX se agrega el modificador -l:
 
-			\verb@grep -r -I -s -l POSIX /etc/*@
+\texttt{grep -r -I -s -l POSIX /etc/*}
 
-			La salida obtenida es:
-			\begin{mylisting}
-			\begin{verbatim}
-				/etc/init.d/glibc.sh
-				/etc/security/limits.conf
-			\end{verbatim}
-			\end{mylisting}
-			
-	\subsection{\ttfamily{passwd}}
-		\subsubsection[]{Cambie su password}
-		
-			Para cambiar el password del usuario logueado se debe ejecutar el comando \verb@passwd@ sin par'ametros, el cual pide que ingrese el password actual (por cuestiones de seguridad), el nuevo seguido de su confirmaci'on. 
-			
-	\subsection{\ttfamily{rm}}
-	
-		Para borrar el archivo \verb@/home/grupoXX/tp/passwd@ se debe invocar \verb@rm@ de la siguiente manera:
-
-		\verb@rm /home/grupoXX/tp/passwd@
-	
-	\subsection{\ttfamily{ln}}
-
-		Para crear dos enlaces \emph{hard} al archivo \verb@/etc/passwd@ llamados \verb@/tmp/contra1@ y \verb@/tmp/contra2@, se debe ejecutar dos veces el comando \verb@ln@ de la siguiente manera:
-
-	\noindent \verb@ln /etc/passwd /tmp/contra1@\\
-		\verb@ln /etc/passwd /tmp/contra2@
-
-		Para poder chequear cuantos enlaces tiene el archivo \verb@\etc\passwd@:
-
-		\verb@ls -l /etc/passwd@
-
-	\noindent La salida obtenida es:
-
-		\verb@-rw-r--r--  3 root     root      941 2008-08-30 12:18 /etc/passwd @
-
-		El n'umero 3 indica que hay 3 nombres que referencian a un mismo archivo en memoria. Si se borrase el archivo \verb@/etc/passwd@, lo que se estar'ia borrando ser'ia una referencia al archivo y no el archivo en s'i. La manera de borrar el archivo f'isicamente es eliminando todas las referencias (o \emph{hardlinks} ) que posea.
-
-    Para generar un \emph{soft link} corremos \verb@ln -s /etc/passwd /tmp/contra3@ y se chequea que efectivamente el n'umero 3 antes obtenido sigue igual.
-    
-	\subsection{\ttfamily{mount}}
-
-		Para montar el CD-ROM en un directorio (por ejemplo \verb@/media/cdrom@ ejecutamos:
-
-		\verb@mount /dev/scd0 /media/cdrom@
-
-		La salida es:
-
-		\verb@mount: block device /dev/scd0 is write-protected, mounting read-only@
-		
-		Para ver los filesystems montados en el sistema, se corre el comando \verb@mount@ sin par'ametros.
+La salida obtenida es:
       \begin{mylisting}
-			\begin{verbatim}
-        /dev/sda1 on / type ext3 (rw,relatime,errors=remount-ro)
-        proc on /proc type proc (rw,noexec,nosuid,nodev)
-        /sys on /sys type sysfs (rw,noexec,nosuid,nodev)
-        varrun on /var/run type tmpfs (rw,noexec,nosuid,nodev,mode=0755)
-        varlock on /var/lock type tmpfs (rw,noexec,nosuid,nodev,mode=1777)
-        udev on /dev type tmpfs (rw,mode=0755)
-        devshm on /dev/shm type tmpfs (rw)
-        devpts on /dev/pts type devpts (rw,gid=5,mode=620)
-        /dev/scd0 on /media/cdrom0 type iso9660 (ro)
-			\end{verbatim}
-			\end{mylisting}
+      \begin{verbatim}
+	/etc/init.d/glibc.sh
+	/etc/security/limits.conf
+      \end{verbatim}
+      \end{mylisting}
 
-	\subsection{\ttfamily{df}}
-	
-		Para ver informaci'on sobre los filesystems montados en el sistema se invoca el comando \verb@df@ sin par'ametros.
+\subsection{\ttfamily{passwd}}
+\subsubsection[]{Cambie su password}
+Para cambiar el password del usuario logueado se debe ejecutar el comando \texttt{passwd} sin par'ametros, el cual pide que ingrese el password actual (por cuestiones de seguridad), el nuevo seguido de su confirmaci'on. 
 
-		La salida del comando es:
-		\begin{mylisting}
-		\begin{verbatim}
-Filesystem           1K-blocks      Used Available Use% Mounted on
-/dev/sda1               505604    377943    101557  79% /
-varrun                  127884        28    127856   1% /var/run
-varlock                 127884         0    127884   0% /var/lock
-udev                    127884        40    127844   1% /dev
-devshm                  127884         0    127884   0% /dev/shm
-/dev/scd0               101916    101916         0 100% /media/cdrom0
-		\end{verbatim}
-		\end{mylisting}
-	
-	\subsection{\ttfamily{ps}}
-		\subsubsection[]{Cu'antos procesos de usuario tiene ejecutando?}
+\subsection{\ttfamily{rm}}
+Para borrar el archivo \texttt{/home/grupoXX/tp/passwd} se debe invocar \texttt{rm} de la siguiente manera:
 
-			Para obtener una lista de los procesos del usuario se invoca el comando \verb@ps@:
+\texttt{rm /home/grupoXX/tp/passwd}
 
-			La salida obtenida es:
-			\begin{mylisting}
-			\begin{verbatim}
-				  PID TTY       TIME CMD
-				 3694 tty1  00:00:00 bash
-				12613 tty1  00:00:00 ps
-			\end{verbatim}
-			\end{mylisting}
-			Por lo tanto, hay 2 procesos de usuario corriendo actualmente.
+\subsection{\ttfamily{ln}}
+Para crear dos enlaces \emph{hard} al archivo \texttt{/etc/passwd} llamados \texttt{/tmp/contra1} y \texttt{/tmp/contra2}, se debe ejecutar dos veces el comando \texttt{ln} de la siguiente manera:
 
-		\subsubsection[]{Indique cuantos son del sistema.}
+\texttt{ln /etc/passwd /tmp/contra1}
 
-			Para obtener una lista de todos los procesos (usuario y sistema) se invoca el comando \verb@ps@ indicando como argumento \verb@-A@:
+\texttt{ln /etc/passwd /tmp/contra2}
 
-			La salida obtenida es:
-			\begin{mylisting}
-			\begin{verbatim}
-	        PID TTY          TIME CMD
-            1 ?        00:00:01 init
-            2 ?        00:00:00 kthreadd
-            3 ?        00:00:00 migration/0
-            4 ?        00:00:00 ksoftirqd/0
-            5 ?        00:00:00 watchdog/0
-            6 ?        00:00:00 events/0
-            7 ?        00:00:00 khelper
-           36 ?        00:00:00 kblockd/0
-           39 ?        00:00:00 kacpid
-           40 ?        00:00:00 kacpi_notify
-           79 ?        00:00:00 kseriod
-          111 ?        00:00:00 pdflush
-          112 ?        00:00:00 kswapd0
-          153 ?        00:00:00 aio/0
-         1208 ?        00:00:00 ata/0
-         1211 ?        00:00:00 ata_aux
-         1228 ?        00:00:00 scsi_eh_0
-         1232 ?        00:00:00 scsi_eh_1
-         2089 ?        00:00:01 kjournald
-         2230 ?        00:00:01 udevd
-         2425 ?        00:00:00 kpsmoused
-         3295 ?        00:00:00 dhclient3
-         3604 tty4     00:00:00 getty
-         3607 tty5     00:00:00 getty
-         3612 tty2     00:00:00 getty
-         3617 tty3     00:00:00 getty
-         3620 tty6     00:00:00 getty
-         3653 ?        00:00:00 syslogd
-         3672 ?        00:00:00 dd
-         3674 ?        00:00:00 klogd
-         3693 tty1     00:00:00 login
-         3694 tty1     00:00:00 bash
-        12202 ?        00:00:00 pdflush
-        12648 tty1     00:00:00 ps
-			\end{verbatim}
-			\end{mylisting}
-			
-			Por lo tanto, la cantidad de procesos del sistema es:\\
-			Cantidad total de procesos = Cantidad total de procesos totales - Cant de procesos del usuario =  35 - 2 = 33
-		\subsection{\ttfamily{umount}}
-			Desmonte el CD-ROM del directorio \verb@umount /media/cdrom@\\
-			Se ejecuta el comando \verb@umount /dev/scd0@
-	  \subsection{\ttfamily{uptime}}
-		  \verb@uptime@ indica cu'anto tiempo hace que est'a el sistema corriendo:\\
-		  \verb@11:11:46 up  2:43,   1 user,   load average: 0.00, 0.00, 0.00@
-	  \subsection{\ttfamily{uname}}
-		  \verb@uname@ imprime informaci'on sobre el kernel que estamos corriendo. Se lo corre con la opci'on \verb@-r@ para que imprima sola la versi'on de, en este caso, linux.\\
-		  \verb@2.6.24-19-virtual@
+Para poder chequear cuantos enlaces tiene el archivo \texttt{/etc/passwd}:
+
+\texttt{ls -l /etc/passwd}
+
+La salida obtenida es:
+
+\texttt{-rw-r--r--  3 root     root      941 2008-08-30 12:18 /etc/passwd}
+
+El n'umero 3 indica que hay 3 nombres que referencian a un mismo archivo en memoria. Si se borrase el archivo \texttt{/etc/passwd}, lo que se estar'ia borrando ser'ia una referencia al archivo y no el archivo en s'i. La manera de borrar el archivo f'isicamente es eliminando todas las referencias (o \emph{hardlinks}) que posea.
+
+Para generar un \emph{soft link} corremos \texttt{ln -s /etc/passwd /tmp/contra3} y se chequea que efectivamente el n'umero 3 antes obtenido sigue igual.
+
+\subsection{\ttfamily{mount}}
+Para montar el CD-ROM en un directorio (por ejemplo \texttt{/media/cdrom} ejecutamos:
+
+\texttt{mount /dev/scd0 /media/cdrom}
+
+La salida es:
+
+\texttt{mount: block device /dev/scd0 is write-protected, mounting read-only}
+		
+Para ver los filesystems montados en el sistema, se corre el comando \texttt{mount} sin par'ametros.
+      \begin{mylisting}
+      \begin{verbatim}
+	/dev/sda1 on / type ext3 (rw,relatime,errors=remount-ro)
+	proc on /proc type proc (rw,noexec,nosuid,nodev)
+	/sys on /sys type sysfs (rw,noexec,nosuid,nodev)
+	varrun on /var/run type tmpfs (rw,noexec,nosuid,nodev,mode=0755)
+	varlock on /var/lock type tmpfs (rw,noexec,nosuid,nodev,mode=1777)
+	udev on /dev type tmpfs (rw,mode=0755)
+	devshm on /dev/shm type tmpfs (rw)
+	devpts on /dev/pts type devpts (rw,gid=5,mode=620)
+	/dev/scd0 on /media/cdrom0 type iso9660 (ro)
+      \end{verbatim}
+      \end{mylisting}
+
+\subsection{\ttfamily{df}}
+Para ver informaci'on sobre los filesystems montados en el sistema se invoca el comando \texttt{df} sin par'ametros.
+
+La salida del comando es:
+       \begin{mylisting}
+       \begin{verbatim}
+	Filesystem           1K-blocks      Used Available Use% Mounted on
+	/dev/sda1               505604    377943    101557  79% /
+	varrun                  127884        28    127856   1% /var/run
+	varlock                 127884         0    127884   0% /var/lock
+	udev                    127884        40    127844   1% /dev
+	devshm                  127884         0    127884   0% /dev/shm
+	/dev/scd0               101916    101916         0 100% /media/cdrom0
+       \end{verbatim}
+       \end{mylisting}
+
+\subsection{\ttfamily{ps}}
+\subsubsection[]{Cu'antos procesos de usuario tiene ejecutando?}
+Para obtener una lista de los procesos del usuario se invoca el comando \texttt{ps}:
+
+La salida obtenida es:
+       \begin{mylisting}
+       \begin{verbatim}
+	PID TTY       TIME CMD
+	3694 tty1  00:00:00 bash
+	12613 tty1  00:00:00 ps
+      \end{verbatim}
+      \end{mylisting}
+Por lo tanto, hay 2 procesos de usuario corriendo actualmente.
+
+\subsubsection[]{Indique cuantos son del sistema.}
+Para obtener una lista de todos los procesos (usuario y sistema) se invoca el comando \texttt{ps} indicando como argumento \texttt{-A}:
+
+La salida obtenida es:
+      \begin{mylisting}
+      \begin{verbatim}
+	  PID TTY          TIME CMD
+	    1 ?        00:00:01 init
+	    2 ?        00:00:00 kthreadd
+	    3 ?        00:00:00 migration/0
+	    4 ?        00:00:00 ksoftirqd/0
+	    5 ?        00:00:00 watchdog/0
+	    6 ?        00:00:00 events/0
+	    7 ?        00:00:00 khelper
+	   36 ?        00:00:00 kblockd/0
+	   39 ?        00:00:00 kacpid
+	   40 ?        00:00:00 kacpi_notify
+	   79 ?        00:00:00 kseriod
+	  111 ?        00:00:00 pdflush
+	  112 ?        00:00:00 kswapd0
+	  153 ?        00:00:00 aio/0
+	 1208 ?        00:00:00 ata/0
+	 1211 ?        00:00:00 ata_aux
+	 1228 ?        00:00:00 scsi_eh_0
+	 1232 ?        00:00:00 scsi_eh_1
+	 2089 ?        00:00:01 kjournald
+	 2230 ?        00:00:01 udevd
+	 2425 ?        00:00:00 kpsmoused
+	 3295 ?        00:00:00 dhclient3
+	 3604 tty4     00:00:00 getty
+	 3607 tty5     00:00:00 getty
+	 3612 tty2     00:00:00 getty
+	 3617 tty3     00:00:00 getty
+	 3620 tty6     00:00:00 getty
+	 3653 ?        00:00:00 syslogd
+	 3672 ?        00:00:00 dd
+	 3674 ?        00:00:00 klogd
+	 3693 tty1     00:00:00 login
+	 3694 tty1     00:00:00 bash
+	12202 ?        00:00:00 pdflush
+	12648 tty1     00:00:00 ps
+      \end{verbatim}
+      \end{mylisting}
+Por lo tanto, la cantidad de procesos del sistema es:
+
+Cantidad total de procesos = Cantidad total de procesos totales - Cant de procesos del usuario =  35 - 2 = 33
+
+\subsection{\ttfamily{umount}}
+Desmonte el CD-ROM del directorio \texttt{umount /media/cdrom}
+
+Se ejecuta el comando \texttt{umount /dev/scd0}
+
+\subsection{\ttfamily{uptime}}
+\texttt{uptime} indica cu'anto tiempo hace que est'a el sistema corriendo:
+
+\texttt{11:11:46 up  2:43,   1 user,   load average: 0.00, 0.00, 0.00}
+
+\subsection{\ttfamily{uname}}
+\texttt{uname} imprime informaci'on sobre el kernel que estamos corriendo. Se lo corre con la opci'on \texttt{-r} para que imprima sola la versi'on de, en este caso, linux.
+
+\texttt{2.6.24-19-virtual}
