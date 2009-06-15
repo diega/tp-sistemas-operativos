@@ -1,0 +1,15 @@
+*.ko
+*.o
+*.cmd
+*.aux
+*.log
+*.out
+*.pdf
+*.toc
+*.mod.c
+
+src/module/.tmp_versions/
+src/module/Module.markers
+src/module/Module.symvers
+src/module/modules.order
+src/module/print_kbleds
