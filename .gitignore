@@ -7,6 +7,7 @@
 *.pdf
 *.toc
 *.mod.c
+loop
 
 src/module/.tmp_versions/
 src/module/Module.markers
