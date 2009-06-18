@@ -1,0 +1,13 @@
+\section{Temas del sistema operativo}
+\subsection{File system}
+\subsection{Prioridades}
+\subsection{Par'ametros del Kernel}
+La cantidad de memoria ram en el sistema puede ser consultada a traves el archivo \texttt{/proc/meminfo} a trav'es del comando \texttt{cat}. 'Este contiene informaci'on de la memoria, tanto f'isica como de intercambio, disponible en el sistema as'i como informaci'on de su uso. El primer campo que presenta en pantalla es \emph{MemTotal} que expresa la cantidad de memoria RAM del sistema expresada en kB. En el caso de nuestro sistema virtualizado estamos hablando de 250636 kB.
+
+El kernel linux nos permite cambiar par'ametros en el momento de carga de la imagen a trav'es del bootloader. La lista de par'ametros disponibles se distribuye junto con las fuentes de linux y se encuentra detallada en \texttt{Documentation/kernel-parameters.txt}.
+
+Para limitar la cantidad de memoria RAM visible al sistema se asigna el par'ametro \emph{mem} en el bootloader siguiendo la siguiente sintaxis:
+
+\texttt{mem=nn[KMG]}
+
+La misma documentaci'on advierte que al utilizarse en arquitecturas X86\_32 debe tambi'en definirse \emph{memmap} para evitar superposici'on de direcciones entre dispositivos PCI y memoria sin usar.
