@@ -1,5 +1,15 @@
 \section{Temas del sistema operativo}
 \subsection{File system}
+Los \emph{hard links} son enlaces entre nombres simb'olicos e \textbf{inodos} del sistema del archivos. Linux, implementando el estandar POSIX, define en cada inodo la siguiente informaci'on:
+\begin{itemize}
+\item longitud (en bytes)
+\item ID de usuario owner
+\item ID de grupo al que pertenece el archivo
+\item permisos de acceso al inodo
+\item \emph{timestamps} referentes al acceso, creaci'on y modificaci'on del inodo
+\item cantidad de enlaces a este inodo
+\end{itemize}
+Es interesante destacar que el espacio apuntado por un inodo es considerado como ocupado cuando tiene m'as de un enlace asociado a 'el. As'i uno puede crear un archivo de nombre foo, linkear un archivo bar a foo, luego eliminar foo y se puede seguir accediendo a la informaci'on original de foo a trav'es de bar; ese espacio queda asignado como archivo accesible hasta que desaparezca bar.
 \subsection{Prioridades}
 \subsection{Par'ametros del Kernel}
 La cantidad de memoria ram en el sistema puede ser consultada a traves el archivo \texttt{/proc/meminfo} a trav'es del comando \texttt{cat}. 'Este contiene informaci'on de la memoria, tanto f'isica como de intercambio, disponible en el sistema as'i como informaci'on de su uso. El primer campo que presenta en pantalla es \emph{MemTotal} que expresa la cantidad de memoria RAM del sistema expresada en kB. En el caso de nuestro sistema virtualizado estamos hablando de 250636 kB.
@@ -11,3 +21,8 @@ Para limitar la cantidad de memoria RAM visible al sistema se asigna el par'amet
 \texttt{mem=nn[KMG]}
 
 La misma documentaci'on advierte que al utilizarse en arquitecturas X86\_32 debe tambi'en definirse \emph{memmap} para evitar superposici'on de direcciones entre dispositivos PCI y memoria sin usar.
+
+\subsection{Administraci'on de memoria}
+El tama~no de la partici'on \emph{swap} utilizada puede verse tambi'en como salida de \texttt{cat /proc/meminfo} en el par'ametro \textbf{SwapTotal:}. A su vez el detalle de los \emph{swaps} activos puede ser consultado a trav'es de \texttt{cat /proc/swaps}.
+
+El tama~no de este archivo de intercambio puede ser incrementado utilizando el comando \texttt{swapon} sobre una partici'on o sobre un archivo fijo dentro de nuestro sistema de archivos. Para este 'ultimo, basta con crear un archivo del tama~no que nos interese incrementar la \emph{swap} mediante \texttt{dd if=/dev/zero of=[archivo-destino] bs=1024 count=[tama~no-deseado]}. Luego se le da formato de archivo de intercambio mediante \texttt{mkswap [archivo-destino]} y finalmente se informa al sistema operativo la existencia de este archivo para que lo utilice mediante \texttt{swapon [archivo-destino]}. Para que estos cambios queden persistentes en el entorno, se agrega en el archivo \texttt{/etc/fstab} la l'inea indicando el archivo, por ejemplo \texttt{[archivo-destino] none swap sw 0 0}. Este archivo se lee en el momento de booteo del sistema por el kernel y lo interpreta l'inea a l'inea para montar sectores de intercambio.
