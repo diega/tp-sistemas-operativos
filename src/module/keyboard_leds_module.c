@@ -68,5 +68,5 @@ module_init(load_module)
 module_exit(remove_module)
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Sistemas Operativos - Grupo XX");
+MODULE_AUTHOR("Sistemas Operativos - Grupo 10");
 MODULE_DESCRIPTION("Ejercicio 3.6.6 - permite prender o apager cada LED del teclado escribiendo en /proc/keyboard_leds");
