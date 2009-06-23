@@ -11,6 +11,21 @@ Los \emph{hard links} son enlaces entre nombres simb'olicos e \textbf{inodos} de
 \end{itemize}
 Es interesante destacar que el espacio apuntado por un inodo es considerado como ocupado cuando tiene m'as de un enlace asociado a 'el. As'i uno puede crear un archivo de nombre foo, linkear un archivo bar a foo, luego eliminar foo y se puede seguir accediendo a la informaci'on original de foo a trav'es de bar; ese espacio queda asignado como archivo accesible hasta que desaparezca bar.
 \subsection{Prioridades}
+Para cambiar la prioridad de un programa en el scheduler, es necesario correrlo a trav'es del programa \texttt{nice}. Este comando recibe como par'ametro un n'umero entero entre -20 y 19 siendo siendo el primero el de mayor prioridad. Para el ejemplo se han corrido \texttt{loop1} y \texttt{loop2} normalmente y \texttt{loop3} mediante el siguiente comando \texttt{nice -n -10 ./loop3 $>$ /dev/null \&}. Por defecto los programas se corren con \emph{niceness} 0. Para inspeccionar el estado de los procesos se corre el comando \texttt{ps -l} obteniendo la siguiente salida:
+\begin{mylisting}
+\begin{verbatim}
+    F S   UID   PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+    4 S     0  3587     1  0  80   0 -   693 wait   tty1     00:00:00 login
+    4 S     0  3741  3588  0  80   0 -   969 wait   tty1     00:00:00 su
+    0 S     0  3742  3741  0  80   0 -  1074 wait   tty1     00:00:00 bash
+    0 R     0  3752  3742 23  80   0 -   414 -      tty1     00:00:16 loop1
+    0 R     0  3753  3742 18  80   0 -   414 -      tty1     00:00:12 loop2
+    4 R     0  3754  3742 82  70 -10 -   414 -      tty1     00:00:42 loop3
+    0 R     0  3763  3742  0  80   0 -   635 -      tty1     00:00:00 ps
+\end{verbatim}
+\end{mylisting}
+Luego de un minuto de ejecuci'on se puede observar que \emph{loop3} ha consumido 42 segundos del procesador frente a los 14 segundos en promedio de los otros.
+
 \subsection{Par'ametros del Kernel}
 La cantidad de memoria ram en el sistema puede ser consultada a traves el archivo \texttt{/proc/meminfo} a trav'es del comando \texttt{cat}. 'Este contiene informaci'on de la memoria, tanto f'isica como de intercambio, disponible en el sistema as'i como informaci'on de su uso. El primer campo que presenta en pantalla es \emph{MemTotal} que expresa la cantidad de memoria RAM del sistema expresada en kB. En el caso de nuestro sistema virtualizado estamos hablando de 250636 kB.
 
